@@ -1,0 +1,1206 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Redes y Micropolítica Escolar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: periódico mural escolar — columna de lectura con "hojas" fijadas, un mapa de red interactivo como pieza central y navegación por secciones fija arriba. */
+:root{
+  --paper:#F2F5F7; --sheet:#FFFFFF; --ink:#13233A; --muted:#55687D; --line:#D3DDE6;
+  --accent:#0B6BBF; --accent-soft:#E2EEF9; --mark:#F5C93A; --mark-ink:#3A2C00;
+  --t-down:#0B6BBF; --t-up:#7A4CC7; --t-hor:#178A66; --t-inf:#D2542A; --t-ext:#A87400;
+  --ok:#178A66; --bad:#C23B2A; --warn:#B57B00;
+  --f-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Literata", Georgia, "Times New Roman", serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --shadow:0 1px 0 rgba(19,35,58,.06), 0 6px 18px -10px rgba(19,35,58,.25);
+  /* paleta de secciones */
+  --c-sky:#0E86C9; --c-sky-soft:#DDF0FA; --c-coral:#DD4F38; --c-coral-soft:#FCE4DE;
+  --c-green:#16946A; --c-green-soft:#DBF2E8; --c-violet:#7448C4; --c-violet-soft:#ECE4FA;
+  --c-amber:#C98100; --c-amber-soft:#FBEFD3; --c-teal:#0B9198; --c-teal-soft:#D6F1F1;
+  --c-pink:#CF3A80; --c-pink-soft:#FADCEA; --hero:#E3F3FA;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0E1822; --sheet:#152330; --ink:#E5ECF2; --muted:#93A5B7; --line:#26394B;
+  --accent:#5AA8EE; --accent-soft:#17324A; --mark:#E9BD33; --mark-ink:#1E1700;
+  --t-down:#5AA8EE; --t-up:#A88CF0; --t-hor:#3CC497; --t-inf:#F0825C; --t-ext:#E2B23F;
+  --ok:#3CC497; --bad:#F07A68; --warn:#E2B23F;
+  --shadow:0 1px 0 rgba(0,0,0,.3), 0 8px 22px -12px rgba(0,0,0,.7);
+  --c-sky:#5DB8EE; --c-sky-soft:#12304A; --c-coral:#F27D66; --c-coral-soft:#3D211C;
+  --c-green:#45C995; --c-green-soft:#133528; --c-violet:#AB8DF2; --c-violet-soft:#2A2142;
+  --c-amber:#F0B53A; --c-amber-soft:#3A2C10; --c-teal:#3CC6CB; --c-teal-soft:#0F3537;
+  --c-pink:#F07AB0; --c-pink-soft:#3D1A2B; --hero:#102A3A; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#0E1822; --sheet:#152330; --ink:#E5ECF2; --muted:#93A5B7; --line:#26394B;
+  --accent:#5AA8EE; --accent-soft:#17324A; --mark:#E9BD33; --mark-ink:#1E1700;
+  --t-down:#5AA8EE; --t-up:#A88CF0; --t-hor:#3CC497; --t-inf:#F0825C; --t-ext:#E2B23F;
+  --ok:#3CC497; --bad:#F07A68; --warn:#E2B23F;
+  --shadow:0 1px 0 rgba(0,0,0,.3), 0 8px 22px -12px rgba(0,0,0,.7);
+  --c-sky:#5DB8EE; --c-sky-soft:#12304A; --c-coral:#F27D66; --c-coral-soft:#3D211C;
+  --c-green:#45C995; --c-green-soft:#133528; --c-violet:#AB8DF2; --c-violet-soft:#2A2142;
+  --c-amber:#F0B53A; --c-amber-soft:#3A2C10; --c-teal:#3CC6CB; --c-teal-soft:#0F3537;
+  --c-pink:#F07AB0; --c-pink-soft:#3D1A2B; --hero:#102A3A; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth; scroll-padding-top:70px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation:none!important; transition:none!important} }
+body{background:var(--paper); color:var(--ink); font-family:var(--f-body); font-size:17px; line-height:1.6;
+  background-image:radial-gradient(var(--line) 1px, transparent 1px); background-size:22px 22px;}
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:10; background:var(--sheet)}
+.wrap{max-width:1080px; margin:0 auto; padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{font-family:var(--f-display); line-height:1.12; text-wrap:balance; margin:0}
+h2{font-size:clamp(1.7rem, 4vw, 2.4rem); font-weight:800; letter-spacing:-.01em}
+h3{font-size:1.2rem; font-weight:700}
+p{margin:0}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--mark); outline-offset:2px; border-radius:4px}
+.eyebrow{font-family:var(--f-mono); font-size:.74rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+.lead{color:var(--muted); max-width:62ch}
+mark{background:linear-gradient(transparent 55%, var(--mark) 55%); color:inherit; padding:0 .1em}
+
+/* nav */
+.nav{position:sticky; top:env(safe-area-inset-top,0px); z-index:9; background:var(--sheet); border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex; gap:6px; overflow-x:auto; padding-block:10px; scrollbar-width:none}
+.nav .wrap::-webkit-scrollbar{display:none}
+.nav a{flex:none; font-family:var(--f-display); font-weight:500; font-size:.88rem; text-decoration:none; color:var(--ink);
+  padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:var(--paper)}
+.nav a:hover,.nav a.on{background:var(--ink); color:var(--sheet); border-color:var(--ink)}
+
+section{padding-block:56px 8px}
+.sec-head{display:grid; gap:10px; margin-bottom:26px}
+.sec-num{font-family:var(--f-mono); font-size:.8rem; color:var(--accent)}
+
+/* sheets (hojas fijadas) */
+.sheet{background:var(--sheet); border:1px solid var(--line); border-radius:6px; box-shadow:var(--shadow); padding:22px; position:relative; min-width:0}
+.pin::before{content:""; position:absolute; top:-9px; left:50%; width:64px; height:18px; transform:translateX(-50%) rotate(-2deg);
+  background:var(--mark); opacity:.75; border-radius:2px}
+
+/* portada */
+.cover{padding-block:44px 20px}
+.cover-grid{display:grid; grid-template-columns:1.5fr 1fr; gap:28px; align-items:start}
+.cover h1{font-size:clamp(2.1rem, 6vw, 4rem); font-weight:800; letter-spacing:-.02em; margin:12px 0 16px}
+.cover h1 em{font-style:normal; color:var(--accent)}
+.meta{display:grid; gap:12px}
+.meta dt{font-family:var(--f-mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.meta dd{margin:2px 0 0; font-family:var(--f-display); font-weight:600}
+.fill{color:var(--muted); border-bottom:2px dashed var(--line)}
+.legend-mini{display:flex; flex-wrap:wrap; gap:8px; margin-top:20px}
+.chip{display:inline-flex; align-items:center; gap:6px; font-family:var(--f-mono); font-size:.75rem; padding:3px 9px; border-radius:999px; border:1px solid var(--line); background:var(--sheet)}
+.dot{width:10px; height:10px; border-radius:50%}
+
+/* conceptos */
+.grid3{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:22px}
+.concept .big{font-family:var(--f-display); font-size:2.6rem; font-weight:800; color:var(--accent); line-height:1}
+.concept h3{margin:10px 0 8px}
+.concept p{font-size:.97rem}
+.types{margin-top:26px; display:grid; grid-template-columns:repeat(auto-fit, minmax(190px,1fr)); gap:14px}
+.type{border-left:5px solid var(--c); padding:12px 14px; background:var(--sheet); border-radius:0 6px 6px 0; border-top:1px solid var(--line); border-right:1px solid var(--line); border-bottom:1px solid var(--line)}
+.type b{font-family:var(--f-display); display:block; margin-bottom:4px}
+.type span{font-size:.92rem; color:var(--muted); display:block}
+.channels{margin-top:22px; overflow-x:auto}
+table{border-collapse:collapse; width:100%; font-size:.93rem; min-width:560px}
+th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--f-mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+
+/* red */
+.net-wrap{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:22px; align-items:start}
+.filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px}
+.fbtn{font-family:var(--f-display); font-size:.86rem; font-weight:500; cursor:pointer; border:1.5px solid var(--c, var(--line)); color:var(--ink);
+  background:var(--sheet); border-radius:999px; padding:6px 12px; display:inline-flex; gap:6px; align-items:center}
+.fbtn[aria-pressed="true"]{background:var(--c, var(--ink)); color:var(--sheet)}
+.fbtn .dot{background:var(--c)}
+.fbtn[aria-pressed="true"] .dot{background:var(--sheet)}
+svg.net{width:100%; height:auto; display:block}
+.edge{fill:none; stroke-width:2.6; transition:opacity .25s}
+.edge.inf{stroke-dasharray:6 6}
+.edge.flow{stroke-dasharray:8 10; animation:flow 1.4s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-36}}
+.hit{fill:none; stroke:transparent; stroke-width:18; cursor:pointer}
+.dim{opacity:.08}
+.node{cursor:pointer}
+.node circle.bg{fill:var(--sheet); stroke:var(--ink); stroke-width:2}
+.node.sel circle.bg{stroke:var(--mark); stroke-width:5}
+.node text{font-family:var(--f-display); font-weight:700; font-size:14px; fill:var(--ink); text-anchor:middle}
+.node .ic{stroke:var(--ink); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.panel h3{margin-bottom:6px}
+.panel .role{font-size:.95rem; color:var(--muted); margin-bottom:12px}
+.panel ul{margin:6px 0 12px; padding-left:18px; font-size:.93rem}
+.panel li{margin-bottom:4px}
+.hint{font-family:var(--f-mono); font-size:.78rem; color:var(--muted)}
+
+/* micropolítica */
+.power{display:grid; gap:10px}
+.prow{display:grid; grid-template-columns:150px 1fr 1fr; gap:12px; align-items:center; font-size:.93rem}
+.prow.head{font-family:var(--f-mono); font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.prow b{font-family:var(--f-display)}
+.bars{display:flex; gap:4px}
+.bars i{flex:1; height:12px; border-radius:2px; background:var(--line)}
+.bars.f i.on{background:var(--t-down)}
+.bars.n i.on{background:var(--t-inf)}
+.tabs{display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 16px}
+.tab{cursor:pointer; font-family:var(--f-display); font-weight:600; font-size:.92rem; border:1px solid var(--line); background:var(--paper); color:var(--ink); border-radius:6px; padding:8px 14px}
+.tab[aria-selected="true"]{background:var(--ink); color:var(--sheet); border-color:var(--ink)}
+.cards2{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
+.mini{border:1px solid var(--line); border-radius:6px; padding:14px; background:var(--paper)}
+.mini b{font-family:var(--f-display); display:block; margin-bottom:4px}
+.mini p{font-size:.93rem}
+.mp-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); gap:22px; align-items:start}
+.leader{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:22px}
+
+/* honduras */
+.hn{display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:16px}
+.hn .sheet{padding:18px}
+.hn .tag{font-family:var(--f-mono); font-size:.72rem; color:var(--accent); letter-spacing:.06em; text-transform:uppercase}
+.hn h3{margin:6px 0 8px; font-size:1.08rem}
+.hn p{font-size:.93rem}
+
+/* casos */
+.case{display:grid; gap:12px}
+.case + .case{margin-top:22px}
+.case .kind{font-family:var(--f-mono); font-size:.74rem; letter-spacing:.08em; text-transform:uppercase; color:var(--c)}
+.case h3{font-size:1.3rem}
+.opts{display:grid; gap:8px; margin-top:4px}
+.opt{text-align:left; cursor:pointer; font:inherit; font-size:.95rem; padding:11px 14px; border-radius:6px; border:1.5px solid var(--line); background:var(--paper); color:var(--ink)}
+.opt:hover{border-color:var(--accent)}
+.opt.right{border-color:var(--ok); background:color-mix(in srgb, var(--ok) 12%, var(--sheet))}
+.opt.wrong{border-color:var(--bad); background:color-mix(in srgb, var(--bad) 10%, var(--sheet))}
+.fb{font-size:.95rem; border-left:4px solid var(--ok); padding:10px 14px; background:var(--paper); border-radius:0 6px 6px 0}
+
+/* reflexión */
+.reflex{max-width:760px; margin:0 auto}
+.reflex p{font-size:1.05rem; margin-bottom:14px; max-width:68ch}
+.reflex p:first-of-type::first-letter{font-family:var(--f-display); font-weight:800; float:left; font-size:3.4rem; line-height:.9; margin:6px 8px 0 0; color:var(--accent)}
+.wc{font-family:var(--f-mono); font-size:.78rem; color:var(--muted)}
+
+/* quiz */
+.q{display:grid; gap:8px; padding-block:14px; border-bottom:1px solid var(--line)}
+.q:last-of-type{border-bottom:0}
+.q b{font-family:var(--f-display); font-size:1.02rem}
+.score{font-family:var(--f-display); font-weight:800; font-size:1.4rem}
+
+/* referencias */
+.refs{list-style:none; padding:0; margin:0; display:grid; gap:12px}
+.refs li{padding-left:2.2em; text-indent:-2.2em; font-size:.95rem; line-height:1.55; overflow-wrap:anywhere; padding-block:4px; border-radius:4px; transition:background .6s}
+.refs li.flash{background:var(--accent-soft)}
+.refs .hnflag{font-family:var(--f-mono); font-size:.68rem; color:var(--accent); border:1px solid var(--accent); border-radius:3px; padding:0 4px; margin-left:6px; text-indent:0; display:inline-block}
+
+/* citas */
+a.c{font-family:inherit; color:var(--accent); text-decoration:none; border-bottom:1px dotted var(--accent); cursor:pointer}
+.sheet-ref{position:fixed; left:0; right:0; bottom:0; z-index:20; background:var(--sheet); border-top:3px solid var(--accent);
+  box-shadow:0 -10px 30px -12px rgba(0,0,0,.35); padding-block:16px calc(16px + env(safe-area-inset-bottom,0px))}
+.sheet-ref .wrap{display:grid; gap:10px}
+.sheet-ref p{font-size:.95rem; overflow-wrap:anywhere}
+.row{display:flex; gap:10px; flex-wrap:wrap}
+.btn{cursor:pointer; font-family:var(--f-display); font-weight:600; font-size:.9rem; border-radius:6px; padding:8px 14px; border:1.5px solid var(--ink); background:var(--ink); color:var(--sheet)}
+.btn.ghost{background:transparent; color:var(--ink)}
+
+/* temporizador */
+.timer{position:fixed; right:max(14px, env(safe-area-inset-right,0px)); bottom:calc(14px + env(safe-area-inset-bottom,0px)); z-index:15;
+  display:flex; align-items:center; gap:8px; background:var(--sheet); border:2px solid var(--zone, var(--line)); border-radius:999px; padding:6px 8px 6px 14px; box-shadow:var(--shadow)}
+.timer .t{font-family:var(--f-mono); font-weight:600; font-variant-numeric:tabular-nums; font-size:1rem; color:var(--zone, var(--ink))}
+.timer .lbl{font-family:var(--f-mono); font-size:.66rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em}
+.timer button{cursor:pointer; border:0; background:var(--paper); color:var(--ink); border-radius:999px; width:32px; height:32px; font-size:.95rem}
+
+footer{padding-block:40px 90px; color:var(--muted); font-size:.85rem; text-align:center}
+
+
+/* ===== color por sección ===== */
+section{--h:var(--c-sky); --hs:var(--c-sky-soft)}
+section[data-hue="sky"]{--h:var(--c-sky); --hs:var(--c-sky-soft)}
+section[data-hue="green"]{--h:var(--c-green); --hs:var(--c-green-soft)}
+section[data-hue="amber"]{--h:var(--c-amber); --hs:var(--c-amber-soft)}
+section[data-hue="coral"]{--h:var(--c-coral); --hs:var(--c-coral-soft)}
+section[data-hue="violet"]{--h:var(--c-violet); --hs:var(--c-violet-soft)}
+section[data-hue="teal"]{--h:var(--c-teal); --hs:var(--c-teal-soft)}
+section[data-hue="pink"]{--h:var(--c-pink); --hs:var(--c-pink-soft)}
+.sec-num{justify-self:start; background:var(--hs); color:var(--h); font-weight:600; padding:4px 12px; border-radius:999px}
+.sec-head h2{color:var(--ink)}
+.sec-head h2::after{content:""; display:block; width:64px; height:6px; border-radius:3px; background:var(--h); margin-top:12px}
+section .sheet{border-top:4px solid var(--h)}
+section .sheet.pin{border-top-width:1px}
+.cover{background:var(--hero); border-bottom:1px solid var(--line)}
+.cover h1 em:nth-of-type(1){color:var(--c-sky)}
+.cover h1 em:nth-of-type(2){color:var(--c-coral)}
+.concept{background:linear-gradient(var(--hs), var(--hs)) top/100% 70px no-repeat, var(--sheet)}
+.concept .big{color:var(--h)}
+.subhead{margin:34px 0 14px; font-size:1.15rem}
+.tab[aria-selected="true"]{background:var(--h); border-color:var(--h); color:#fff}
+.nav a::before{content:""; display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:7px; background:var(--dot, var(--c-sky)); vertical-align:1px}
+.nav a:nth-child(2){--dot:var(--c-sky)} .nav a:nth-child(3){--dot:var(--c-green)} .nav a:nth-child(4){--dot:var(--c-amber)}
+.nav a:nth-child(5){--dot:var(--c-coral)} .nav a:nth-child(6){--dot:var(--c-violet)} .nav a:nth-child(7){--dot:var(--c-teal)}
+.nav a:nth-child(8){--dot:var(--c-pink)} .nav a:nth-child(9){--dot:var(--c-sky)} .nav a:nth-child(10){--dot:var(--c-amber)} .nav a:nth-child(11){--dot:var(--c-green)}
+/* elementos */
+.elements{margin-top:22px}
+.elflow{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.elarrow{color:var(--muted); font-family:var(--f-mono)}
+.elbtn{cursor:pointer; font-family:var(--f-display); font-weight:600; font-size:.92rem; padding:9px 14px; border-radius:10px; border:2px solid var(--h); background:var(--sheet); color:var(--ink)}
+.elbtn[aria-selected="true"]{background:var(--h); color:#fff}
+.eldesc{margin-top:14px; padding:14px 16px; border-radius:8px; background:var(--paper); border-left:5px solid var(--h); font-size:.97rem}
+.funcs{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:16px}
+.fchip{font-family:var(--f-display); font-size:.85rem; font-weight:600; padding:4px 12px; border-radius:999px; color:var(--h); border:1.5px solid var(--h)}
+.tscroll{overflow-x:auto}
+.tg{display:inline-block; font-family:var(--f-mono); font-size:.72rem; padding:2px 8px; border-radius:999px; color:var(--c); border:1.5px solid var(--c); white-space:nowrap}
+.improve .sheet{background:linear-gradient(var(--hs), var(--hs)) top/100% 6px no-repeat, var(--sheet)}
+.improve h3{margin:8px 0 6px; font-size:1.05rem}
+.improve p{font-size:.93rem}
+.tagc{display:inline-grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--h); color:#fff; font-family:var(--f-display); font-weight:800}
+.why{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-bottom:26px}
+.whyc{background:var(--hs); border-radius:10px; padding:14px; display:grid; gap:6px; border-bottom:4px solid var(--h)}
+.whyc b{font-family:var(--f-display); color:var(--ink); font-size:.98rem; line-height:1.2}
+.whyc span{font-size:.88rem; color:var(--ink)}
+.ticks{margin:0 0 10px; padding-left:20px; font-size:.95rem}
+.ticks li{margin-bottom:4px}
+.ticks li::marker{color:var(--h)}
+.prob{flex-basis:100%; font-size:.9rem; color:var(--ink); background:var(--paper); border-radius:6px; padding:8px 12px}
+.mainflag{color:var(--c-coral); border-color:var(--c-coral)}
+@media (max-width: 980px){ .why{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width: 520px){ .why{grid-template-columns:1fr} .elarrow{display:none} .tabs .tab{flex:1 1 auto} }
+
+/* portada: datos */
+.logo-row{display:flex; gap:14px; align-items:center; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--line)}
+.logo-row dd{margin:2px 0 0}
+.uni{font-family:var(--f-display); font-weight:700; font-size:1.1rem}
+.members{list-style:none; padding:0; margin:0; display:grid; gap:2px}
+.empty{color:var(--muted); border-bottom:2px dashed var(--line)}
+
+/* espacios para imágenes */
+.slot{margin:26px auto 0; display:grid; gap:8px; max-width:720px}
+.slot .frame{aspect-ratio:var(--ar, 4/3); max-width:100%; border:2px dashed var(--line); border-radius:6px; background:var(--sheet);
+  display:grid; place-items:center; align-content:center; gap:6px; text-align:center; padding:18px; color:var(--muted); overflow:hidden; font-size:.9rem}
+.slot .frame b{font-family:var(--f-display); color:var(--ink); font-size:1rem}
+.slot .frame code{font-family:var(--f-mono); font-size:.8rem; background:var(--accent-soft); color:var(--ink); padding:2px 6px; border-radius:4px}
+.slot .frame.filled{border:1px solid var(--line); padding:0; display:block}
+.slot .frame img{width:100%; height:100%; object-fit:cover; display:block}
+.slot figcaption{font-size:.88rem; line-height:1.45}
+.slot figcaption .fn{font-family:var(--f-display); font-weight:700; display:block}
+.slot.logo{margin:0; flex:none; width:72px}
+.slot.logo .frame{aspect-ratio:1/1; padding:4px; font-size:.62rem; gap:2px}
+.slot.logo .frame.filled img{object-fit:contain}
+.slot.logo figcaption{display:none}
+
+/* ilustraciones */
+.band{margin-top:30px}
+.band svg,.case-art svg{width:100%; height:auto; display:block}
+.fig{fill:var(--sheet); stroke:var(--ink); stroke-width:2}
+.ink{stroke:var(--ink); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.lnk{fill:none; stroke-width:2.5; stroke-dasharray:6 8; animation:flow 2.2s linear infinite}
+.svgt{font-family:var(--f-display); font-weight:700; fill:var(--ink)}
+.case{grid-template-columns:230px minmax(0,1fr); align-items:start; gap:20px}
+.case-body{display:grid; gap:12px; min-width:0}
+.case-art{border-radius:6px; overflow:hidden; background:var(--accent-soft)}
+
+/* simulaciones */
+.sim{display:grid; gap:16px}
+.chain{display:flex; flex-wrap:wrap; gap:6px; align-items:flex-start}
+.hop{display:flex; flex-direction:column; align-items:center; gap:4px; width:78px; text-align:center; font-family:var(--f-display); font-size:.78rem; line-height:1.15; opacity:.35; transition:opacity .3s}
+.hop.on{opacity:1}
+.hop .av{width:46px; height:46px; border-radius:50%; display:grid; place-items:center; background:var(--paper); border:2.5px solid var(--c)}
+.hop.cur .av{box-shadow:0 0 0 4px var(--mark)}
+.hop svg{width:26px; height:26px}
+.harrow{align-self:center; margin-top:-16px; color:var(--muted); font-family:var(--f-mono)}
+.bubble{font-size:1.05rem; padding:14px 16px; border-radius:14px 14px 14px 3px; background:var(--paper); border:1px solid var(--line); min-height:3.4em}
+.bubble .who{display:block; font-family:var(--f-mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:4px}
+.meter{height:12px; background:var(--line); border-radius:999px; overflow:hidden}
+.meter>i{display:block; height:100%; width:0; background:var(--c); transition:width .6s ease, background .3s}
+.mlabel{display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:.78rem; margin-bottom:5px; font-variant-numeric:tabular-nums}
+.dets{display:flex; flex-wrap:wrap; gap:8px}
+.det{font-family:var(--f-mono); font-size:.78rem; padding:3px 10px; border-radius:999px; border:1.5px solid var(--ok); color:var(--ok)}
+.det.lost{border-color:var(--bad); color:var(--bad); text-decoration:line-through; opacity:.75}
+.lesson{border-left:4px solid var(--accent); background:var(--paper); padding:12px 14px; border-radius:0 6px 6px 0; font-size:.95rem}
+.meters{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px}
+.round-n{font-family:var(--f-mono); font-size:.78rem; color:var(--accent)}
+.react{display:grid; gap:6px; font-size:.93rem}
+.react span{display:block; padding:8px 12px; border-radius:6px; background:var(--paper); border:1px solid var(--line)}
+.delta{font-family:var(--f-mono); font-size:.8rem}
+.profile{font-family:var(--f-display); font-weight:800; font-size:1.6rem; color:var(--accent)}
+
+@media (max-width: 820px){
+  .case{grid-template-columns:1fr}
+  .meters{grid-template-columns:1fr}
+  .cover-grid,.net-wrap,.mp-grid{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr}
+  .cards2,.leader{grid-template-columns:1fr}
+  .prow{grid-template-columns:100px 1fr 1fr; gap:8px}
+  body{font-size:16px}
+}
+</style>
+<style>body{margin:0}</style>
+</head>
+<body>
+
+
+<nav class="nav" aria-label="Secciones del mural">
+  <div class="wrap">
+    <a href="#portada">Portada</a><a href="#conceptos">Conceptos</a><a href="#red">Mapa de la red</a>
+    <a href="#rumor">Simulador: el rumor</a>
+    <a href="#micropolitica">Micropolítica</a><a href="#director">Simulador: sé el director</a><a href="#honduras">Honduras</a><a href="#casos">Casos</a>
+    <a href="#reflexion">Reflexión</a><a href="#quiz">Quiz</a><a href="#referencias">Referencias</a>
+  </div>
+</nav>
+
+<!-- 1. PORTADA -->
+<header id="portada" class="cover">
+  <div class="wrap cover-grid">
+    <div>
+      <p class="eyebrow">Mural digital interactivo · Gestión Educativa</p>
+      <h1>Las redes de <em>comunicación</em> y las relaciones <em>micropolíticas</em> en la escuela</h1>
+      <p class="lead">Cómo circula la información en un centro educativo, quién influye en las decisiones y cómo se negocian los conflictos. Toca los actores del mapa, resuelve los casos y pon a prueba lo aprendido.</p>
+      <div class="legend-mini" aria-label="Tipos de comunicación">
+        <span class="chip"><span class="dot" style="background:var(--t-down)"></span>Descendente</span>
+        <span class="chip"><span class="dot" style="background:var(--t-up)"></span>Ascendente</span>
+        <span class="chip"><span class="dot" style="background:var(--t-hor)"></span>Horizontal</span>
+        <span class="chip"><span class="dot" style="background:var(--t-inf)"></span>Informal</span>
+        <span class="chip"><span class="dot" style="background:var(--t-ext)"></span>Escuela–familia–comunidad</span>
+      </div>
+    </div>
+    <div class="sheet pin">
+      <div class="logo-row"><figure class="slot logo" data-img="logo"></figure><div><p class="eyebrow">Universidad</p><p class="uni" id="p-universidad"></p><p class="hint" id="p-facultad"></p></div></div>
+      <dl class="meta">
+        <div><dt>Asignatura</dt><dd>Gestión Educativa</dd></div>
+        <div><dt>Nombre del trabajo</dt><dd>Mural digital interactivo: Las redes de comunicación y las relaciones micropolíticas en la escuela</dd></div>
+        <div><dt>Docente</dt><dd id="p-docente"></dd></div>
+        <div><dt>Sección</dt><dd id="p-seccion"></dd></div>
+        <div><dt>Integrantes</dt><dd><ul class="members" id="p-integrantes"></ul></dd></div>
+        <div><dt>Fecha</dt><dd id="p-fecha"></dd></div>
+      </dl>
+    </div>
+  </div>
+  <div class="wrap band">
+    <svg viewBox="0 0 1000 250" role="img" aria-label="Ilustración: una escuela hondureña con su bandera, rodeada por director, docentes, estudiantes, padres de familia y comunidad conectados por líneas de comunicación">
+      <line x1="0" y1="232" x2="1000" y2="232" class="ink"/>
+      <!-- conexiones -->
+      <path class="lnk" style="stroke:var(--t-down)" d="M330 150 Q 290 100 240 150"/>
+      <path class="lnk" style="stroke:var(--t-hor)" d="M230 160 Q 180 120 140 175"/>
+      <path class="lnk" style="stroke:var(--t-ext)" d="M330 150 Q 520 10 770 150"/>
+      <path class="lnk" style="stroke:var(--t-inf)" d="M780 150 Q 830 110 880 150"/>
+      <path class="lnk" style="stroke:var(--t-up)" d="M140 175 Q 230 60 320 140"/>
+      <!-- escuela -->
+      <rect x="400" y="110" width="220" height="122" class="fig"/>
+      <polygon points="385,112 510,56 635,112" style="fill:var(--accent);stroke:var(--ink);stroke-width:2"/>
+      <rect x="450" y="120" width="120" height="24" rx="3" style="fill:var(--mark);stroke:var(--ink);stroke-width:1.5"/>
+      <text x="510" y="137" text-anchor="middle" class="svgt" style="font-size:13px;fill:var(--mark-ink)">CEB LAS ACACIAS</text>
+      <rect x="418" y="156" width="34" height="28" class="fig"/><line x1="435" y1="156" x2="435" y2="184" class="ink"/>
+      <rect x="568" y="156" width="34" height="28" class="fig"/><line x1="585" y1="156" x2="585" y2="184" class="ink"/>
+      <rect x="490" y="168" width="40" height="64" style="fill:var(--accent-soft);stroke:var(--ink);stroke-width:2"/>
+      <circle cx="510" cy="88" r="9" class="fig"/><path d="M510 88 v-5 M510 88 h4" class="ink"/>
+      <!-- bandera de Honduras -->
+      <line x1="665" y1="232" x2="665" y2="64" class="ink"/>
+      <g transform="translate(667 66)">
+        <rect width="66" height="14" style="fill:#18A0D6"/><rect y="14" width="66" height="14" style="fill:#FFFFFF"/><rect y="28" width="66" height="14" style="fill:#18A0D6"/>
+        <g style="fill:#18A0D6"><circle cx="33" cy="21" r="1.8"/><circle cx="26" cy="18" r="1.6"/><circle cx="26" cy="24" r="1.6"/><circle cx="40" cy="18" r="1.6"/><circle cx="40" cy="24" r="1.6"/></g>
+        <rect width="66" height="42" style="fill:none;stroke:var(--ink);stroke-width:1"/>
+      </g>
+      <!-- personas -->
+      <g transform="translate(330 232)"><circle cx="0" cy="-72" r="12" class="fig"/><path d="M-17 0 v-38 a17 17 0 0 1 34 0 v38z" class="fig"/><rect x="10" y="-44" width="14" height="18" style="fill:var(--accent-soft);stroke:var(--ink);stroke-width:1.5"/><text y="16" text-anchor="middle" class="svgt" style="font-size:13px">Director</text></g>
+      <g transform="translate(235 232)"><circle cx="0" cy="-68" r="12" class="fig"/><path d="M-16 0 v-36 a16 16 0 0 1 32 0 v36z" class="fig"/><path d="M-26 -44 l-12 -14" class="ink"/><text y="16" text-anchor="middle" class="svgt" style="font-size:13px">Docentes</text></g>
+      <g transform="translate(120 232)"><circle cx="0" cy="-50" r="9" class="fig"/><path d="M-12 0 v-26 a12 12 0 0 1 24 0 v26z" class="fig"/><circle cx="34" cy="-44" r="9" class="fig"/><path d="M22 0 v-22 a12 12 0 0 1 24 0 v22z" class="fig"/><text x="17" y="16" text-anchor="middle" class="svgt" style="font-size:13px">Estudiantes</text></g>
+      <g transform="translate(775 232)"><circle cx="0" cy="-70" r="12" class="fig"/><path d="M-16 0 v-38 a16 16 0 0 1 32 0 v38z" class="fig"/><circle cx="36" cy="-66" r="11" class="fig"/><path d="M22 0 v-34 a15 15 0 0 1 30 0 v34z" class="fig"/><text x="18" y="16" text-anchor="middle" class="svgt" style="font-size:13px">Padres de familia</text></g>
+      <g transform="translate(905 232)"><path d="M-30 0 v-48 l30 -26 30 26 v48z" class="fig"/><rect x="-8" y="-28" width="16" height="28" class="fig"/><text y="16" text-anchor="middle" class="svgt" style="font-size:13px">Comunidad</text></g>
+      <g transform="translate(40 232)"><rect x="-18" y="-60" width="36" height="60" class="fig"/><line x1="-18" y1="-40" x2="18" y2="-40" class="ink"/><text y="16" text-anchor="middle" class="svgt" style="font-size:12px">Admón.</text></g>
+      <path class="lnk" style="stroke:var(--t-hor)" d="M58 190 Q 140 130 215 175"/>
+      <!-- burbujas -->
+      <g transform="translate(278 50)"><rect width="56" height="26" rx="13" class="fig"/><circle cx="18" cy="13" r="2.5" style="fill:var(--ink)"/><circle cx="28" cy="13" r="2.5" style="fill:var(--ink)"/><circle cx="38" cy="13" r="2.5" style="fill:var(--ink)"/></g>
+      <g transform="translate(840 72)"><rect width="44" height="26" rx="13" class="fig"/><text x="22" y="18" text-anchor="middle" class="svgt" style="font-size:14px;fill:var(--t-inf)">¿?</text></g>
+    </svg>
+  </div>
+</header>
+
+<main>
+<!-- 2. CONCEPTOS -->
+<section id="conceptos" data-hue="sky">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">Sección 2</span><h2>Conceptos principales</h2>
+      <p class="lead">Fuente principal: el libro de la asignatura, capítulos 7 y 8 de <i>Organización y gestión de centros escolares</i>. Toca cualquier cita para ver la referencia completa.</p></div>
+    <div class="grid3">
+      <article class="sheet concept" style="--h:var(--c-sky);--hs:var(--c-sky-soft)">
+        <div class="big" aria-hidden="true">↔</div>
+        <h3>Comunicación organizativa</h3>
+        <p>Es la comunicación interpersonal situada dentro del centro escolar, que se extiende también a sus relaciones con el entorno (<a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano, 2003, p. 109</a>). En esencia, es «un proceso colectivo e interactivo que crea e interpreta mensajes» (Hoy &amp; Miskel, 2001, como se citó en <a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano, 2003, p. 109</a>). Puede seguir un modelo <mark>lineal</mark>, de una sola vía, o <mark>circular</mark>, de doble vía, en el que emisor y receptor intercambian papeles (<a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano, 2003, p. 109</a>).</p>
+      </article>
+      <article class="sheet concept" style="--h:var(--c-green);--hs:var(--c-green-soft)">
+        <div class="big" aria-hidden="true">⌘</div>
+        <h3>Redes de comunicación</h3>
+        <p>Una red es un patrón de interacción comunicativa entre miembros del centro que, con el tiempo, se ha regularizado; en muchos sentidos equivale a la estructura organizativa (<a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano, 2003, p. 114</a>). En un centro no existe una sola red: coexisten varias, <mark>formales e informales</mark>, que se solapan y se afectan entre sí (<a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano, 2003, p. 115</a>).</p>
+      </article>
+      <article class="sheet concept" style="--h:var(--c-coral);--hs:var(--c-coral-soft)">
+        <div class="big" aria-hidden="true">⚖</div>
+        <h3>Micropolítica educativa</h3>
+        <p>Conjunto de procesos sociales (presiones, tensiones, conflictos, colaboraciones y maniobras tras la escena) que impregnan la vida de alumnos, padres, profesores y directivos (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, p. 131</a>). Son las estrategias con que individuos y grupos usan su poder e influencia para promover sus intereses (Hoyle, 1988, como se citó en <a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, p. 135</a>). Los centros no son «balsas de aceite» siempre guiadas por el consenso (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, p. 142</a>).</p>
+      </article>
+    </div>
+
+    <div class="sheet elements" style="--h:var(--c-sky);--hs:var(--c-sky-soft)">
+      <h3>¿Qué elementos intervienen en la comunicación?</h3>
+      <p class="hint" style="margin:4px 0 14px">Toca cada elemento. Adaptado de la Figura 7.1 de <a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano (2003, pp. 110–113)</a>.</p>
+      <div class="elflow" role="tablist" aria-label="Elementos de la comunicación" id="elflow"></div>
+      <div class="eldesc" id="eldesc" aria-live="polite"></div>
+      <div class="funcs"><span class="eyebrow">Funciones de la comunicación organizativa (<a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano, 2003, pp. 113–114</a>):</span>
+        <span class="fchip" style="--h:var(--c-sky)">Producción, regulación y control</span>
+        <span class="fchip" style="--h:var(--c-amber)">Cambio y mejora</span>
+        <span class="fchip" style="--h:var(--c-pink)">Socialización y convivencia</span></div>
+    </div>
+    <figure class="slot" data-img="img1"></figure>
+
+    <h3 class="subhead">Tipos de redes según <a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano (2003, pp. 115–122)</a></h3>
+    <div class="types">
+      <div class="type" style="--c:var(--t-down)"><b>Formal</b><span>Canales sancionados por el centro y ligados a sus metas. Atraviesan la jerarquía y deben ser conocidos, conectar a todos y ser lo más cortos posible (p. 115).</span></div>
+      <div class="type" style="--c:var(--t-inf)"><b>Informal</b><span>Surge de forma espontánea por proximidad o afinidad y se difunde en «racimos». Llena vacíos de información y da apoyo, pero puede alimentar rumores (pp. 116–118).</span></div>
+      <div class="type" style="--c:var(--t-down)"><b>Vertical descendente</b><span>De la dirección hacia abajo: planes de acogida, documentos institucionales, instrucciones de trabajo y notas internas como circulares y actas (pp. 118–119).</span></div>
+      <div class="type" style="--c:var(--t-up)"><b>Vertical ascendente</b><span>De la base hacia arriba: buzón de sugerencias, encuestas de opinión e indicadores. La jerarquía tiende a filtrarla; lo más veraz suele circular en horizontal (pp. 119–121).</span></div>
+      <div class="type" style="--c:var(--t-hor)"><b>Horizontal o lateral</b><span>Entre miembros del mismo nivel. Sirve para coordinar, compartir información, resolver conflictos y darse apoyo emocional (p. 121).</span></div>
+    </div>
+
+    <div class="sheet channels" style="--h:var(--c-green);--hs:var(--c-green-soft)">
+      <h3 style="margin-bottom:10px">Canales de comunicación en la escuela</h3>
+      <div class="tscroll"><table>
+        <thead><tr><th>Canal</th><th>Red</th><th>Para qué sirve</th><th>Cuidado con</th></tr></thead>
+        <tbody>
+          <tr><td>Plan de acogida</td><td><span class="tg" style="--c:var(--t-down)">Descendente</span></td><td>Integrar a docentes, familias y estudiantes nuevos</td><td>Dar demasiada información el primer día (sobrecarga)</td></tr>
+          <tr><td>Documentos institucionales y reglamento</td><td><span class="tg" style="--c:var(--t-down)">Descendente</span></td><td>Dar a conocer metas, normas y procedimientos</td><td>Que se archiven y nadie los consulte</td></tr>
+          <tr><td>Circulares, actas y tablón de anuncios</td><td><span class="tg" style="--c:var(--t-down)">Descendente</span></td><td>Convocar e informar acuerdos</td><td>No confirman que se leyeron</td></tr>
+          <tr><td>Buzón de sugerencias</td><td><span class="tg" style="--c:var(--t-up)">Ascendente</span></td><td>Recoger ideas y quejas de cualquier miembro</td><td>Pierde valor si nadie responde</td></tr>
+          <tr><td>Encuestas de opinión</td><td><span class="tg" style="--c:var(--t-up)">Ascendente</span></td><td>Conocer el clima y las valoraciones</td><td>Si no se devuelven los resultados, la gente deja de participar</td></tr>
+          <tr><td>Reuniones, comisiones y asambleas</td><td><span class="tg" style="--c:var(--t-hor)">Horizontal</span></td><td>Clarificar significados y llegar a acuerdos</td><td>Que pocas voces dominen</td></tr>
+          <tr><td>Agenda y entrevista con familias</td><td><span class="tg" style="--c:var(--t-ext)">Familia</span></td><td>Seguimiento del estudiante</td><td>Horarios incompatibles con el trabajo de las familias</td></tr>
+          <tr><td>Grupos de WhatsApp</td><td><span class="tg" style="--c:var(--t-ext)">Familia</span></td><td>Avisos rápidos y coordinación</td><td>Saturación y conflictos públicos</td></tr>
+          <tr><td>Conversación de pasillo</td><td><span class="tg" style="--c:var(--t-inf)">Informal</span></td><td>Consultas rápidas y apoyo entre colegas</td><td>Rumores y distorsión</td></tr>
+        </tbody>
+      </table></div>
+      <p class="hint" style="margin-top:10px">Basado en <a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano (2003, pp. 118–124)</a>, <a class="c" data-r="macia2016" href="#ref-macia2016">Macià Bordalba (2016)</a> y <a class="c" data-r="andres2020" href="#ref-andres2020">Andrés Cabello y Giró Miranda (2020)</a>.</p>
+    </div>
+
+    <h3 class="subhead">¿Cómo mejorar la comunicación? (<a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano, 2003, pp. 122–126</a>)</h3>
+    <div class="grid3 improve">
+      <div class="sheet" style="--h:var(--c-amber);--hs:var(--c-amber-soft)"><span class="tagc">1</span><h3>Ampliar oportunidades de interacción</h3><p>Crear momentos y espacios para que docentes, directivos, estudiantes y familias se encuentren, y que su contenido tenga valor educativo para los alumnos.</p></div>
+      <div class="sheet" style="--h:var(--c-teal);--hs:var(--c-teal-soft)"><span class="tagc">2</span><h3>Priorizar medios ricos</h3><p>El diálogo cara a cara permite retroalimentación inmediata. Hay que evitar la <b>sobrecarga</b> o <b>subcarga</b> de información y los problemas de <b>omisión</b> y <b>distorsión</b> de mensajes.</p></div>
+      <div class="sheet" style="--h:var(--c-violet);--hs:var(--c-violet-soft)"><span class="tagc">3</span><h3>Reducir la ambigüedad</h3><p>El feedback permite comprobar si el mensaje se entendió y corregirlo. Conviene solicitarlo, darlo a tiempo y centrarlo en conductas concretas.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. MAPA DE RED -->
+<section id="red" data-hue="green">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">Sección 3</span><h2>Mapa visual de las redes de comunicación</h2>
+      <p class="lead">Filtra por tipo de red. Toca un actor para ver qué envía, qué recibe y por qué canal; toca una flecha para conocer el canal. En un centro coexisten múltiples redes que se solapan (<a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano, 2003, p. 115</a>).</p></div>
+    <div class="filters" role="group" aria-label="Filtrar flujos">
+      <button class="fbtn" data-f="all" aria-pressed="true" style="--c:var(--ink)">Todos</button>
+      <button class="fbtn" data-f="down" aria-pressed="false" style="--c:var(--t-down)"><span class="dot"></span>Descendente</button>
+      <button class="fbtn" data-f="up" aria-pressed="false" style="--c:var(--t-up)"><span class="dot"></span>Ascendente</button>
+      <button class="fbtn" data-f="hor" aria-pressed="false" style="--c:var(--t-hor)"><span class="dot"></span>Horizontal</button>
+      <button class="fbtn" data-f="inf" aria-pressed="false" style="--c:var(--t-inf)"><span class="dot"></span>Informal</button>
+      <button class="fbtn" data-f="ext" aria-pressed="false" style="--c:var(--t-ext)"><span class="dot"></span>Familia y comunidad</button>
+    </div>
+    <div class="net-wrap">
+      <div class="sheet" style="padding:10px">
+        <svg class="net" id="net" viewBox="0 0 620 470" role="img" aria-label="Red de comunicación entre director, docentes, estudiantes, padres de familia, personal administrativo y comunidad">
+          <defs id="defs"></defs>
+          <g id="edges"></g>
+          <g id="nodes"></g>
+        </svg>
+      </div>
+      <aside class="sheet panel" id="panel" aria-live="polite">
+        <h3>Explora la red</h3>
+        <p class="role">La escuela es un sistema de relaciones. Las líneas continuas son redes formales; las punteadas, informales.</p>
+        <p class="hint">Sugerencia para la exposición: activa "Ascendente" y pregunta al público si esos canales funcionan de verdad en su escuela.</p>
+      </aside>
+    </div>
+    <figure class="slot" data-img="img2"></figure>
+  </div>
+</section>
+
+<!-- SIMULADOR 1: EL RUMOR -->
+<section id="rumor" data-hue="amber">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">Simulador 1</span><h2>El viaje de un mensaje</h2>
+      <p class="lead">La dirección necesita convocar a una reunión de padres. Envía el mismo mensaje por dos caminos y observa qué llega al final. La red informal es rápida, pero puede difundir rumores con información incompleta o incorrecta (<a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano, 2003, p. 118</a>).</p></div>
+    <div class="sheet sim">
+      <div class="tabs" role="tablist" aria-label="Camino del mensaje">
+        <button class="tab" role="tab" aria-selected="true" data-route="inf" id="route-inf">Por el pasillo (informal)</button>
+        <button class="tab" role="tab" aria-selected="false" data-route="for" id="route-for">Por canales formales</button>
+      </div>
+      <div class="chain" id="chain"></div>
+      <div class="bubble" id="bubble" aria-live="polite"></div>
+      <div>
+        <div class="mlabel"><span>Fidelidad del mensaje</span><span id="fidv">100 %</span></div>
+        <div class="meter"><i id="fid" style="--c:var(--ok)"></i></div>
+      </div>
+      <div class="dets" id="dets" aria-label="Datos clave del mensaje"></div>
+      <div class="row">
+        <button class="btn" id="simNext">Siguiente paso</button>
+        <button class="btn ghost" id="simReset">Reiniciar</button>
+      </div>
+      <div class="lesson" id="simLesson" hidden></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. MICROPOLÍTICA -->
+<section id="micropolitica" data-hue="coral">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">Sección 4</span><h2>Relaciones micropolíticas</h2>
+      <p class="lead">En las relaciones cotidianas del centro se ponen en juego intereses y capacidades de poder diferentes. Reconocerlas significa admitir que el conflicto es un elemento natural de la vida organizativa (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, pp. 131–132</a>).</p></div>
+
+    <h3 class="subhead">¿Por qué la escuela es propensa a la micropolítica? (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, pp. 132–135</a>)</h3>
+    <div class="why">
+      <div class="whyc" style="--h:var(--c-coral);--hs:var(--c-coral-soft)"><b>Las personas construyen la organización</b><span>El centro se forma con interacciones, pactos y negociaciones.</span></div>
+      <div class="whyc" style="--h:var(--c-amber);--hs:var(--c-amber-soft)"><b>Metas ambiguas</b><span>Cada grupo las interpreta según sus intereses.</span></div>
+      <div class="whyc" style="--h:var(--c-violet);--hs:var(--c-violet-soft)"><b>Tecnología imprecisa</b><span>No hay un único modo correcto de enseñar.</span></div>
+      <div class="whyc" style="--h:var(--c-sky);--hs:var(--c-sky-soft)"><b>Decisiones problemáticas</b><span>No siguen un proceso lógico y lineal; tienen carga ideológica.</span></div>
+      <div class="whyc" style="--h:var(--c-green);--hs:var(--c-green-soft)"><b>Débil articulación</b><span>Cada parte funciona con cierta autonomía.</span></div>
+    </div>
+
+    <div class="mp-grid">
+      <div class="sheet" style="--h:var(--c-coral);--hs:var(--c-coral-soft)">
+        <h3 style="margin-bottom:4px">Autoridad e influencia de cada actor</h3>
+        <p class="hint" style="margin-bottom:14px">Valoración ilustrativa del grupo para una escuela pública hipotética, usando las dos formas de poder de <a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González (2003, p. 139)</a>.</p>
+        <div class="power" id="power">
+          <div class="prow head"><span>Actor</span><span>Autoridad</span><span>Influencia</span></div>
+        </div>
+      </div>
+      <div class="sheet" style="--h:var(--c-coral);--hs:var(--c-coral-soft)">
+        <p class="eyebrow" style="margin-bottom:6px">Elementos de las relaciones micropolíticas (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, pp. 135–142</a>)</p>
+        <div class="tabs" role="tablist" aria-label="Elementos micropolíticos">
+          <button class="tab" role="tab" aria-selected="true" data-t="int" id="tab-int">Intereses</button>
+          <button class="tab" role="tab" aria-selected="false" data-t="gru" id="tab-gru">Grupos de interés</button>
+          <button class="tab" role="tab" aria-selected="false" data-t="est" id="tab-est">Estrategias</button>
+          <button class="tab" role="tab" aria-selected="false" data-t="pod" id="tab-pod">Fuentes de poder</button>
+          <button class="tab" role="tab" aria-selected="false" data-t="imp" id="tab-imp">Negociación y consenso</button>
+        </div>
+        <div role="tabpanel" data-p="int" class="cards2">
+          <div class="mini"><b>Ideológicos y profesionales</b><p>Defender una filosofía educativa, un método de enseñanza o una forma de evaluar.</p></div>
+          <div class="mini"><b>Personales</b><p>Lograr cierto grupo de alumnos, coordinar un equipo o contar con apoyos en el aula.</p></div>
+          <div class="mini"><b>Materiales</b><p>Conseguir un horario, ayudas o el uso de ciertas instalaciones.</p></div>
+          <div class="mini"><b>Ojo</b><p>Los intereses personales y materiales a menudo se presentan como profesionales, porque estos son más respetables en la escuela (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, p. 136</a>).</p></div>
+        </div>
+        <div role="tabpanel" data-p="gru" class="cards2" hidden>
+          <div class="mini"><b>Formales o no</b><p>Un grupo de interés puede coincidir con un departamento o equipo, o reunir a personas de distintas posiciones (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, pp. 136–137</a>).</p></div>
+          <div class="mini"><b>Ocultos e inactivos</b><p>A veces viven en «coexistencia armada» y en calma aparente (Ball, 1989, como se citó en <a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, p. 137</a>).</p></div>
+          <div class="mini"><b>Se activan con los cambios</b><p>Un nuevo director o una reforma sacan a la superficie conflictos que estaban ocultos (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, p. 137</a>).</p></div>
+          <div class="mini"><b>En nuestra escuela</b><p>Docentes con antigüedad, docentes jóvenes, directiva de padres y gobierno estudiantil con su docente asesor.</p></div>
+        </div>
+        <div role="tabpanel" data-p="est" class="cards2" hidden>
+          <div class="mini"><b>Controlar reuniones e información</b><p>Decidir cuándo y en qué orden se tratan los temas, o filtrar datos.</p></div>
+          <div class="mini"><b>Buscar apoyos</b><p>Sumar aliados, incluso grupos externos como los padres, para aumentar la presión.</p></div>
+          <div class="mini"><b>Resistencia pasiva</b><p>Ignorar acuerdos o esperar el momento oportuno para proponer algo (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, p. 138</a>).</p></div>
+          <div class="mini"><b>Coalición, negociación o conflicto</b><p>Se elige según el poder disponible y la compatibilidad de intereses (Bacharach &amp; Mundell, 1993, como se citó en <a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, p. 139</a>).</p></div>
+        </div>
+        <div role="tabpanel" data-p="pod" class="cards2" hidden>
+          <div class="mini"><b>Control de recursos</b><p>Quien consigue ayudas o distribuye materiales escasos tiene poder.</p></div>
+          <div class="mini"><b>Información y normas</b><p>Filtrar información o interpretar reglamentos a favor propio.</p></div>
+          <div class="mini"><b>Toma de decisiones</b><p>Influir en el antes, el cómo y el cuándo de una decisión.</p></div>
+          <div class="mini"><b>Organización informal</b><p>Moverse bien en las redes informales: la «política de pasillo» (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, pp. 140–141</a>).</p></div>
+        </div>
+        <div role="tabpanel" data-p="imp" class="cards2" hidden>
+          <div class="mini"><b>Desvelar las redes de poder</b><p>Hacer visibles los intereses y espacios de influencia que atraviesan el centro (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, p. 142</a>).</p></div>
+          <div class="mini"><b>Evitar falsos consensos</b><p>Imponer una línea produce adhesiones superficiales que luego se rompen (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, p. 143</a>).</p></div>
+          <div class="mini"><b>Decisiones compartidas</b><p>Espacios para dialogar, deliberar y decidir en conjunto: consejo de profesores, Consejo Escolar de Desarrollo, mediación.</p></div>
+          <div class="mini"><b>Bien común provisional</b><p>Las metas comunes surgen del conflicto y la negociación, y siempre se pueden reajustar (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, p. 144</a>).</p></div>
+          <p class="hint" style="grid-column:1/-1">Para <a class="c" data-r="jares1997" href="#ref-jares1997">Jares (1997)</a>, el conflicto surge de metas, valores o intereses incompatibles y puede ser una oportunidad de mejora.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subhead">Autoridad e influencia: dos caras del poder (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, pp. 139–140</a>)</h3>
+    <div class="leader">
+      <div class="sheet" style="--h:var(--c-sky);--hs:var(--c-sky-soft)"><p class="eyebrow">Autoridad · liderazgo formal</p><h3 style="margin:6px 0 8px">Nace del cargo</h3>
+        <ul class="ticks">
+          <li>Es formal y estructural: deriva de la posición.</li>
+          <li>Fluye de arriba hacia abajo.</li>
+          <li>Opera mediante normas y procedimientos oficiales.</li>
+          <li>Su alcance y legitimidad están claramente delimitados.</li>
+        </ul>
+        <p class="hint">En muchas escuelas predomina este tipo de poder (<a class="c" data-r="zuniga2017" href="#ref-zuniga2017">Zúñiga-Rodríguez &amp; Álvarez-Tabares, 2017</a>).</p></div>
+      <div class="sheet" style="--h:var(--c-coral);--hs:var(--c-coral-soft)"><p class="eyebrow">Influencia · liderazgo informal</p><h3 style="margin:6px 0 8px">Nace de la persona y sus alianzas</h3>
+        <ul class="ticks">
+          <li>Es informal, tácita y dinámica.</li>
+          <li>Circula en todas direcciones: arriba, abajo y a los lados.</li>
+          <li>Opera por intercambio, persuasión y negociación.</li>
+          <li>Puede venir de muchas fuentes y su alcance es más ambiguo.</li>
+        </ul>
+        <p class="hint">El poder también surge de las alianzas (<a class="c" data-r="bardisa1997" href="#ref-bardisa1997">Bardisa Ruiz, 1997</a>).</p></div>
+    </div>
+    <figure class="slot" data-img="img3"></figure>
+  </div>
+</section>
+
+<!-- SIMULADOR 2: SÉ EL DIRECTOR -->
+<section id="director" data-hue="violet">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">Simulador 2</span><h2>Sé el director: la asignación de grados</h2>
+      <p class="lead">Acabas de llegar al CEB Las Acacias y quieres rotar los grados entre docentes. Los veteranos se oponen; los jóvenes te apoyan en voz baja. Un nuevo director suele sacar a la superficie conflictos que estaban ocultos (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003, p. 137</a>). Toma tres decisiones y mira cómo reacciona cada grupo.</p></div>
+    <div class="sheet sim">
+      <div class="meters">
+        <div><div class="mlabel"><span>Confianza docente</span><span id="v-conf"></span></div><div class="meter"><i id="m-conf" style="--c:var(--t-down)"></i></div></div>
+        <div><div class="mlabel"><span>Clima escolar</span><span id="v-clima"></span></div><div class="meter"><i id="m-clima" style="--c:var(--t-hor)"></i></div></div>
+        <div><div class="mlabel"><span>Avance del cambio</span><span id="v-camb"></span></div><div class="meter"><i id="m-camb" style="--c:var(--t-up)"></i></div></div>
+      </div>
+      <div id="dirStage" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- HONDURAS -->
+<section id="honduras" data-hue="teal">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">Contexto nacional</span><h2>La red en Honduras: espacios formales de participación</h2>
+      <p class="lead">La normativa hondureña crea canales concretos para que la comunidad educativa participe y se comunique.</p></div>
+    <div class="hn">
+      <article class="sheet"><span class="tag">Marco general</span><h3>Ley Fundamental de Educación</h3>
+        <p>Rige el sistema educativo nacional y dedica un título a la participación de la comunidad en la educación (<a class="c" data-r="hn2012" href="#ref-hn2012">Congreso Nacional de Honduras, 2012</a>).</p></article>
+      <article class="sheet"><span class="tag">Familias y comunidad</span><h3>Consejos Escolares de Desarrollo y COMDE</h3>
+        <p>La Ley de Fortalecimiento a la Educación Pública y la Participación Comunitaria crea estos consejos para que padres, docentes y comunidad participen en la gestión escolar y municipal (<a class="c" data-r="hn2011" href="#ref-hn2011">Congreso Nacional de Honduras, 2011</a>).</p></article>
+      <article class="sheet"><span class="tag">Estudiantes</span><h3>Gobiernos estudiantiles</h3>
+        <p>Espacios donde los estudiantes aprenden a organizarse, debatir, presentar propuestas, llegar a acuerdos y manejar conflictos (<a class="c" data-r="hnse2017" href="#ref-hnse2017">Secretaría de Educación de Honduras &amp; UNICEF, 2017</a>).</p></article>
+      <article class="sheet"><span class="tag">Convivencia</span><h3>Reglamento de convivencia escolar</h3>
+        <p>Regula la organización y la convivencia en los centros gubernamentales, incluida la forma de atender conflictos (<a class="c" data-r="hnse2019" href="#ref-hnse2019">Secretaría de Educación de Honduras, 2019</a>).</p></article>
+      <article class="sheet"><span class="tag">Investigación nacional</span><h3>Clima organizacional</h3>
+        <p>Un estudio con docentes de la UPNFM muestra que el clima organizacional es clave para entender las percepciones del personal y la convivencia institucional (<a class="c" data-r="pineda2026" href="#ref-pineda2026">Pineda Reyes, 2026</a>).</p></article>
+    </div>
+    <figure class="slot" data-img="img4"></figure>
+  </div>
+</section>
+
+<!-- 5. CASOS -->
+<section id="casos" data-hue="pink">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">Sección 5</span><h2>Ejemplos prácticos: ¿qué harías tú?</h2>
+      <p class="lead">Tres situaciones hipotéticas en el "CEB Las Acacias", una escuela de educación básica inventada para este mural. Elige una respuesta y compara con la teoría.</p></div>
+    <div id="cases"></div>
+  </div>
+</section>
+
+<!-- 6. REFLEXIÓN -->
+<section id="reflexion" data-hue="sky">
+  <div class="wrap">
+    <div class="sec-head" style="text-align:center; justify-items:center"><span class="sec-num">Sección 6</span><h2>Reflexión grupal</h2></div>
+    <article class="sheet pin reflex" id="reflexText">
+      <p>La comunicación sostiene todo lo que ocurre en un centro escolar: sin ella no es posible concertar decisiones, coordinar tareas ni construir formas compartidas de pensar y actuar (<a class="c" data-r="nieto2003" href="#ref-nieto2003">Nieto Cano, 2003</a>). Al elaborar este mural comprobamos que no basta con enviar circulares. Una comunicación de una sola vía informa, pero no garantiza comprensión. Hace falta un modelo circular, con canales ascendentes, horizontales y retroalimentación, para que docentes, estudiantes y familias participen. Cuando los canales formales callan, la red informal llena el vacío y el rumor distorsiona los mensajes.</p>
+      <p>También entendimos que la escuela no funciona como una estructura neutral. Sus metas son ambiguas, las decisiones no siguen una lógica lineal y conviven intereses ideológicos, personales y materiales (<a class="c" data-r="gonzalez2003" href="#ref-gonzalez2003">González González, 2003</a>). El poder no se reduce a la autoridad del cargo: la influencia circula en todas direcciones y se apoya en alianzas, información y redes informales (<a class="c" data-r="bardisa1997" href="#ref-bardisa1997">Bardisa Ruiz, 1997</a>). Reconocerlo permite ver el conflicto como parte normal de la vida institucional y como una oportunidad de mejora (<a class="c" data-r="jares1997" href="#ref-jares1997">Jares, 1997</a>).</p>
+      <p>En Honduras existen espacios formales para canalizar esa participación, como los consejos escolares de desarrollo y los gobiernos estudiantiles (<a class="c" data-r="hn2011" href="#ref-hn2011">Congreso Nacional de Honduras, 2011</a>; <a class="c" data-r="hnse2017" href="#ref-hnse2017">Secretaría de Educación de Honduras &amp; UNICEF, 2017</a>). Su valor depende de que funcionen como lugares reales de diálogo.</p>
+      <p>Por eso, el gestor educativo debe ampliar las oportunidades de interacción, priorizar medios ricos como el diálogo cara a cara, pedir retroalimentación y promover decisiones compartidas en lugar de imponer falsos consensos. Una escuela que se comunica bien también tiene tensiones, pero sabe conversarlas.</p>
+      <p class="wc" id="wc"></p>
+    </article>
+    <figure class="slot" data-img="img5"></figure>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" data-hue="amber">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">Para la exposición</span><h2>Quiz relámpago</h2>
+      <p class="lead">Cinco preguntas para cerrar la exposición con la participación del público.</p></div>
+    <div class="sheet" id="quizBox"></div>
+  </div>
+</section>
+
+<!-- REFERENCIAS -->
+<section id="referencias" data-hue="green">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">APA 7.ª edición</span><h2>Referencias</h2>
+      <p class="lead">Las fuentes marcadas con <span class="hnflag mainflag">LIBRO</span> son los capítulos del libro de la asignatura, fuente principal del mural. Las marcadas con <span class="hnflag">HN</span> son hondureñas.</p></div>
+    <div class="sheet"><ol class="refs" id="refs"></ol></div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">Mural digital elaborado para la asignatura Gestión Educativa. Los casos y la valoración de influencia son ilustrativos.</div></footer>
+
+<div class="sheet-ref" id="refSheet" hidden role="dialog" aria-label="Referencia">
+  <div class="wrap">
+    <p id="refText"></p>
+    <div class="row"><button class="btn" id="refGo">Ver en referencias</button><button class="btn ghost" id="refClose">Cerrar</button></div>
+  </div>
+</div>
+
+<div class="timer" id="timer" aria-label="Cronómetro de exposición">
+  <div><div class="lbl">Exposición</div><div class="t" id="tval">00:00</div></div>
+  <button id="tplay" aria-label="Iniciar cronómetro">▶</button>
+  <button id="treset" aria-label="Reiniciar cronómetro">↺</button>
+</div>
+
+<script>
+/* =====================================================================
+   CONFIGURACIÓN DEL MURAL — EDITA SOLO ESTA PARTE
+   Escribe siempre entre las comillas "  ". No borres comas ni llaves.
+   ===================================================================== */
+
+/* ---- DATOS DE LA PORTADA ---- */
+const PORTADA = {
+  universidad: "Universidad Pedagógica Nacional Francisco Morazán",              // DATO-UNIVERSIDAD   ej.: "Universidad Pedagógica Nacional Francisco Morazán"
+  facultad:    "Facultad de Humanidades · Licenciatura en Gestión Educativa",              // DATO-FACULTAD      (opcional) ej.: "Facultad de Humanidades · Licenciatura en ..."
+  docente:     "Allan Sorto",              // DATO-DOCENTE       ej.: "M. Sc. Nombre Apellido"
+  seccion:     "A",              // DATO-SECCION       ej.: "Sección 0901"
+  integrantes: ["Cristopher Josué Aguilar", "Osiris Yessenia Reyes Galindo", "Yeymi Nateli Alvarado Gonzales", "Gledis Juventina Medrano García", "Karen Yessenia Alvarado Chávez", "José Milton Gómez Godínez"],    // DATO-INTEGRANTES   ej.: ["Ana López", "Luis Pérez", "María Cruz"] (de 3 a 5)
+  fecha:       "Sábado, 07 de noviembre de 2026"               // DATO-FECHA         ej.: "11 de noviembre de 2026"
+};
+
+/* ---- IMÁGENES ----
+   url:      ruta del archivo dentro de la carpeta img del repositorio.
+             Ya viene escrita: solo sube tu foto a la carpeta img con ese
+             mismo nombre (ej.: img/imagen-1.jpg). Si tu foto es .png,
+             cambia aquí la extensión (ej.: "img/imagen-1.png").
+   titulo:   título de la imagen (para la leyenda APA)
+   autor:    autor o fotógrafo (o nombre del sitio si no aparece autor)
+   anio:     año de publicación de la imagen ("s.f." si no tiene)
+   sitio:    sitio web de donde la tomaste (Unsplash, Pexels, Wikimedia Commons...)
+   licencia: ej.: "Licencia Unsplash", "CC BY-SA 4.0", "Foto propia del grupo"
+             (si escribes "Foto propia del grupo" no se agrega a Referencias)
+   fuente:   enlace de la PÁGINA donde encontraste la foto (para la referencia APA)
+   alt:      descripción breve de lo que se ve (accesibilidad)            */
+const IMAGENES = {
+  logo: { // IMAGEN-LOGO  · cuadrada, PNG con fondo transparente
+    tema:"Logo de la universidad", ar:"1/1",
+    url:"img/logo.png", titulo:"", autor:"", anio:"", sitio:"", licencia:"", fuente:"", alt:"Logo de la universidad" },
+  img1: { // IMAGEN-1  · sección Conceptos · horizontal 4:3
+    tema:"Docentes en reunión o claustro de profesores", ar:"4/3",
+    url:"img/imagen-1.png", titulo:"Consejo de profesores en una escuela hondureña", autor:"OpenAI", anio:"2026", sitio:"ChatGPT", licencia:"Imagen generada con inteligencia artificial", fuente:"https://chatgpt.com", alt:"Docentes reunidos alrededor de una mesa; una docente explica un diagrama de flechas mientras otros escuchan y opinan" },
+  img2: { // IMAGEN-2  · sección Mapa de la red · horizontal 4:3
+    tema:"Reunión de padres de familia con docentes", ar:"4/3",
+    url:"img/imagen-2.png", titulo:"Reunión de padres de familia con la maestra guía", autor:"OpenAI", anio:"2026", sitio:"ChatGPT", licencia:"Imagen generada con inteligencia artificial", fuente:"https://chatgpt.com", alt:"Madres y padres en un aula conversando con la maestra; una madre pregunta y otra firma una circular" },
+  img3: { // IMAGEN-3  · sección Micropolítica · horizontal 4:3
+    tema:"Directivos o consejo escolar dialogando y negociando", ar:"4/3",
+    url:"img/imagen-3.png", titulo:"Negociación entre grupos de interés en el consejo escolar", autor:"OpenAI", anio:"2026", sitio:"ChatGPT", licencia:"Imagen generada con inteligencia artificial", fuente:"https://chatgpt.com", alt:"Docentes veteranos y jóvenes sentados frente a frente mientras el director media; participan una madre y una estudiante" },
+  img4: { // IMAGEN-4  · sección Honduras · horizontal 4:3
+    tema:"Gobierno estudiantil o centro educativo hondureño", ar:"4/3",
+    url:"img/imagen-4.png", titulo:"Elección del gobierno estudiantil en una escuela hondureña", autor:"OpenAI", anio:"2026", sitio:"ChatGPT", licencia:"Imagen generada con inteligencia artificial", fuente:"https://chatgpt.com", alt:"Estudiantes uniformados votan en una urna de cartón en el patio escolar, con la bandera de Honduras al fondo" },
+  img5: { // IMAGEN-5  · sección Reflexión · panorámica 16:9
+    tema:"Comunidad educativa reunida (acto cívico, asamblea)", ar:"16/9",
+    url:"img/imagen-5.png", titulo:"Comunidad educativa reunida en un acto cívico", autor:"OpenAI", anio:"2026", sitio:"ChatGPT", licencia:"Imagen generada con inteligencia artificial", fuente:"https://chatgpt.com", alt:"Estudiantes, docentes, familias y vecinos reunidos en el patio escolar mientras la directora habla" }
+};
+/* ===================== FIN DE LA CONFIGURACIÓN ===================== */
+
+/* ---------- Referencias APA 7 (orden alfabético) ---------- */
+const REFS = [
+ {k:"andres2020", t:'Andrés Cabello, S., &amp; Giró Miranda, J. (2020). Canales y estrategias de comunicación de la comunidad educativa. <i>Ehquidad. International Welfare Policies and Social Work Journal</i>, (13), 79–98. <a href="https://doi.org/10.15257/ehquidad.2020.0004" target="_blank" rel="noopener">https://doi.org/10.15257/ehquidad.2020.0004</a>'},
+ {k:"ball1989", t:'Ball, S. J. (1989). <i>La micropolítica de la escuela: Hacia una teoría de la organización escolar</i> (N. Míguez, Trad.). Paidós; Ministerio de Educación y Ciencia. (Trabajo original publicado en 1987)'},
+ {k:"bardisa1997", t:'Bardisa Ruiz, T. (1997). Teoría y práctica de la micropolítica en las organizaciones escolares. <i>Revista Iberoamericana de Educación</i>, (15), 13–52. <a href="https://rieoei.org/RIE/article/download/1120/2118" target="_blank" rel="noopener">https://rieoei.org/RIE/article/download/1120/2118</a>'},
+ {k:"cabrera2018", t:'Cabrera-Otálora, M. I., &amp; Giraldo-Díaz, R. (2018). Micropolítica y macropolítica en las organizaciones educativas. <i>Revista Libre Empresa</i>, <i>15</i>(1), 159–167. <a href="https://doi.org/10.18041/1657-2815/libreempresa.29.009" target="_blank" rel="noopener">https://doi.org/10.18041/1657-2815/libreempresa.29.009</a>'},
+ {k:"hn2011", hn:true, t:'Congreso Nacional de Honduras. (2011). <i>Ley de Fortalecimiento a la Educación Pública y la Participación Comunitaria</i> (Decreto n.º 35-2011).'},
+ {k:"hn2012", hn:true, t:'Congreso Nacional de Honduras. (2012). <i>Ley Fundamental de Educación</i> (Decreto n.º 262-2011). La Gaceta, n.º 32,754. <a href="https://doi.org/10.5377/lrd.v33i0.1264" target="_blank" rel="noopener">https://doi.org/10.5377/lrd.v33i0.1264</a>'},
+ {k:"garreta2022", t:'Garreta-Bochaca, J., &amp; Llevot-Calvet, N. (2022). Escuela y familias de origen extranjero: Canales y barreras a la comunicación en la educación primaria. <i>Educación XX1</i>, <i>25</i>(2), 315–335. <a href="https://www.redalyc.org/articulo.oa?id=70672510015" target="_blank" rel="noopener">https://www.redalyc.org/articulo.oa?id=70672510015</a>'},
+ {k:"gonzalez1998", t:'González González, M. T. (1998). La micropolítica de las organizaciones escolares. <i>Revista de Educación</i>, (316), 215–239.'},
+ {k:"gonzalez2003", main:true, t:'González González, M. T. (2003). Las relaciones micropolíticas. En M. T. González González (Coord.), <i>Organización y gestión de centros escolares: Dimensiones y procesos</i> (pp. 131–146). Pearson Educación.'},
+ {k:"jares1997", t:'Jares, X. R. (1997). El lugar del conflicto en la organización escolar. <i>Revista Iberoamericana de Educación</i>, (15), 53–73. <a href="https://doi.org/10.35362/rie1501121" target="_blank" rel="noopener">https://doi.org/10.35362/rie1501121</a>'},
+ {k:"macia2016", t:'Macià Bordalba, M. (2016). La comunicación familia-escuela: El uso de las TIC en los centros de primaria. <i>Revista Electrónica Interuniversitaria de Formación del Profesorado</i>, <i>19</i>(1), 73–83. <a href="https://doi.org/10.6018/reifop.19.1.245841" target="_blank" rel="noopener">https://doi.org/10.6018/reifop.19.1.245841</a>'},
+ {k:"nieto2003", main:true, t:'Nieto Cano, J. M. (2003). La comunicación en las organizaciones escolares. En M. T. González González (Coord.), <i>Organización y gestión de centros escolares: Dimensiones y procesos</i> (pp. 107–130). Pearson Educación.'},
+ {k:"obando2008", t:'Obando Castillo, G. (2008). La participación docente en la toma de decisiones desde la visión micropolítica. <i>Educación</i>, <i>17</i>(32), 87–108. <a href="https://revistas.pucp.edu.pe/index.php/educacion/article/view/1804" target="_blank" rel="noopener">https://revistas.pucp.edu.pe/index.php/educacion/article/view/1804</a>'},
+ {k:"pineda2026", hn:true, t:'Pineda Reyes, G. A. (2026). Pensar y vivir el clima organizacional: Un análisis desde las representaciones sociales de los docentes de la UPNFM. <i>Paradigma: Revista de Investigación Educativa</i>, <i>33</i>(55), 43–64. <a href="https://doi.org/10.5377/paradigma.v33i55.23069" target="_blank" rel="noopener">https://doi.org/10.5377/paradigma.v33i55.23069</a>'},
+ {k:"robbins2017", t:'Robbins, S. P., &amp; Judge, T. A. (2017). <i>Comportamiento organizacional</i> (L. E. Pineda Ayala, Trad.; 17.ª ed.). Pearson Educación.'},
+ {k:"rodriguez2017", t:'Rodríguez Revelo, E. (2017). Micropolítica escolar y el liderazgo directivo en la escuela. <i>Revista Educación</i>, <i>41</i>(1), 1–14. <a href="https://doi.org/10.15517/revedu.v41i1.21407" target="_blank" rel="noopener">https://doi.org/10.15517/revedu.v41i1.21407</a>'},
+ {k:"hnse2019", hn:true, t:'Secretaría de Educación de Honduras. (2019). <i>Reglamento interno para la convivencia escolar en los centros educativos gubernamentales de Honduras</i> (Acuerdo n.º 0766-SE-2019). <a href="https://www.tsc.gob.hn/web/leyes/Acuerdo_0766-SE-2019.pdf" target="_blank" rel="noopener">https://www.tsc.gob.hn/web/leyes/Acuerdo_0766-SE-2019.pdf</a>'},
+ {k:"hnse2017", hn:true, t:'Secretaría de Educación de Honduras &amp; UNICEF. (2017). <i>Reglamento de gobiernos estudiantiles</i>. <a href="https://www.unicef.org/honduras/media/371/file/Reglamento-de-gobiernos-estudiantiles-2017.pdf" target="_blank" rel="noopener">https://www.unicef.org/honduras/media/371/file/Reglamento-de-gobiernos-estudiantiles-2017.pdf</a>'},
+ {k:"zuniga2017", t:'Zúñiga-Rodríguez, W., &amp; Álvarez-Tabares, O. J. (2017). El poder de la autoridad formal en las organizaciones escolares. <i>Praxis</i>, <i>13</i>(2), 159–169. <a href="https://doi.org/10.21676/23897856.2377" target="_blank" rel="noopener">https://doi.org/10.21676/23897856.2377</a>'}
+];
+const refMap = {};
+const ol = document.getElementById('refs');
+REFS.forEach(r=>{ refMap[r.k]=r; const li=document.createElement('li'); li.id='ref-'+r.k; li.innerHTML=r.t+(r.hn?' <span class="hnflag">HN</span>':'')+(r.main?' <span class="hnflag mainflag">LIBRO</span>':''); ol.appendChild(li); });
+
+/* ---------- Portada: rellena los datos ---------- */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function setDato(id,val,ph){ const el=document.getElementById(id); if(!el) return;
+  if(val&&val.trim()){ el.textContent=val; el.classList.remove('empty'); } else if(ph){ el.textContent=ph; el.classList.add('empty'); } else { el.hidden=true; } }
+setDato('p-universidad',PORTADA.universidad,'[Nombre de la universidad]');
+setDato('p-facultad',PORTADA.facultad,'');
+setDato('p-docente',PORTADA.docente,'[Nombre del docente]');
+setDato('p-seccion',PORTADA.seccion,'[Sección]');
+setDato('p-fecha',PORTADA.fecha,'[Fecha de entrega]');
+(()=>{ const ul=document.getElementById('p-integrantes'); const lista=PORTADA.integrantes.filter(x=>x&&x.trim());
+  ul.innerHTML = lista.length ? lista.map(n=>`<li>${esc(n)}</li>`).join('') : ['[Integrante 1]','[Integrante 2]','[Integrante 3]'].map(n=>`<li class="empty">${n}</li>`).join(''); })();
+
+/* ---------- Imágenes: espacios y leyendas APA ---------- */
+let figN=0;
+document.querySelectorAll('figure.slot').forEach(fig=>{
+  const key=fig.dataset.img, im=IMAGENES[key]; if(!im) return;
+  const isLogo=key==='logo'; const n = isLogo ? 0 : ++figN;
+  const codigo = isLogo ? 'IMAGEN-LOGO' : 'IMAGEN-'+n;
+  const ruta=(im.url||'').trim();
+  const frame=document.createElement('div'); frame.className='frame'; frame.style.setProperty('--ar',im.ar);
+  const cap=document.createElement('figcaption');
+  const vacio=()=>{ frame.classList.remove('filled');
+    frame.innerHTML = isLogo ? `<span>Logo</span><code>${esc(ruta||'img/logo.png')}</code>` :
+      `<b>Espacio para imagen ${n}</b><span>Tema sugerido: ${esc(im.tema)}</span><span>Sube la foto a la carpeta <code>img</code> con el nombre <code>${esc((ruta||'img/imagen-'+n+'.jpg').replace(/^img\//,''))}</code></span>`;
+    cap.innerHTML=`<span class="fn">Figura ${n}</span><i>${esc(im.tema)}</i>`; };
+  fig.appendChild(frame);
+  if(!isLogo) fig.appendChild(cap);
+  vacio();
+  if(!ruta) return;
+  const img=new Image(); img.alt=im.alt||im.titulo||im.tema;
+  img.onload=()=>{
+    frame.innerHTML=''; frame.classList.add('filled'); frame.appendChild(img);
+    if(isLogo) return;
+    const nota = im.autor
+      ? `<i>Nota.</i> ${im.licencia&&/propia/i.test(im.licencia) ? esc(im.licencia)+'.' : `Tomado de <i>${esc(im.titulo||'Sin título')}</i>, por ${esc(im.autor)}, ${esc(im.anio||'s.f.')}, ${esc(im.sitio)}. ${esc(im.licencia)}`}`
+      : `<i>Nota.</i> <span style="color:var(--bad)">Completa autor, año, sitio y licencia de ${codigo} en la configuración.</span>`;
+    cap.innerHTML=`<span class="fn">Figura ${n}</span><i>${esc(im.titulo||im.tema)}</i><br>${nota}`;
+    if(im.autor && !/propia/i.test(im.licencia||'')){
+      const k='fig-'+key, li=document.createElement('li'); li.id='ref-'+k;
+      const enlace = im.fuente ? ` <a href="${esc(im.fuente)}" target="_blank" rel="noopener">${esc(im.fuente)}</a>` : '';
+      li.innerHTML=`${esc(im.autor)}. (${esc(im.anio||'s.f.')}). <i>${esc(im.titulo||'Sin título')}</i> [Fotografía]. ${esc(im.sitio)}.${enlace}`;
+      refMap[k]={t:li.innerHTML};
+      const next=[...ol.children].find(x=>x.textContent.localeCompare(li.textContent,'es')>0);
+      ol.insertBefore(li,next||null);
+    }
+  };
+  img.src=ruta;
+});
+
+/* ---------- Hoja de cita ---------- */
+const sheet=document.getElementById('refSheet'), refText=document.getElementById('refText'); let curRef=null;
+function goRef(k){ const li=document.getElementById('ref-'+k); if(!li) return; li.scrollIntoView({block:'center'}); li.classList.add('flash'); setTimeout(()=>li.classList.remove('flash'),1800); }
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a.c'); if(!a) return;
+  e.preventDefault(); curRef=a.dataset.r; refText.innerHTML=refMap[curRef].t; sheet.hidden=false; document.getElementById('refGo').focus();
+});
+document.getElementById('refClose').onclick=()=>{sheet.hidden=true};
+document.getElementById('refGo').onclick=()=>{sheet.hidden=true; goRef(curRef)};
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') sheet.hidden=true; });
+
+/* ---------- Red de comunicación ---------- */
+const NODES = {
+  dir:{x:310,y:66,  label:'Director', role:'Máxima autoridad formal. Coordina, toma decisiones y representa al centro ante la comunidad y la Secretaría de Educación.', ic:'M-9 6h18M-7 6v-8h14v8M-3 -2v-5h6v5'},
+  adm:{x:96, y:168, label:'Administrativo', role:'Secretaría, conserjería y apoyo. Manejan matrícula, documentos y mucha información que circula de manera informal.', ic:'M-9 -7h18v14h-18zM-9 -2h18M-3 2h6'},
+  doc:{x:310,y:236, label:'Docentes', role:'Puente entre la dirección, los estudiantes y las familias. Concentran la mayor parte de los flujos de la red.', ic:'M-10 -6h20v11h-20zM-3 5v4M3 5v4M-6 9h12'},
+  com:{x:528,y:168, label:'Comunidad', role:'Vecinos, iglesias, municipalidad, empresas y organizaciones que apoyan o exigen al centro.', ic:'M-10 8v-8l5-5 5 5v8M0 8v-6l5-5 5 5v6'},
+  est:{x:150,y:396, label:'Estudiantes', role:'Destinatarios principales de la educación. Participan de forma organizada a través del gobierno estudiantil.', ic:'M0 -9l11 5-11 5-11-5zM-6 -1v6c3 3 9 3 12 0v-6'},
+  pad:{x:470,y:396, label:'Padres de familia', role:'Corresponsables de la educación. Se comunican con docentes y dirección, y participan en los consejos escolares.', ic:'M-6 -6a3 3 0 1 0 0.1 0M6 -6a3 3 0 1 0 0.1 0M-11 8c0-6 10-6 10 0M1 8c0-6 10-6 10 0'}
+};
+const EDGES = [
+  {a:'dir',b:'doc',t:['down'],bend:-34, l:'Circulares, instrucciones y metas institucionales', c:'Formal descendente · circular, reunión, acta'},
+  {a:'doc',b:'dir',t:['up'],bend:-34, l:'Informes, planificaciones, sugerencias y quejas', c:'Formal ascendente · informe escrito, consejo de profesores'},
+  {a:'dir',b:'adm',t:['down'],bend:-18, l:'Asignación de tareas administrativas', c:'Formal descendente · memorándum'},
+  {a:'adm',b:'doc',t:['hor'],bend:20,bi:true, l:'Coordinación de matrícula, horarios y documentos', c:'Formal horizontal · oficina, correo'},
+  {a:'doc',b:'est',t:['down'],bend:-14, l:'Clases, tareas, normas de aula y calificaciones', c:'Formal descendente · aula, plataforma, cuaderno'},
+  {a:'est',b:'dir',t:['up'],bend:70, l:'Propuestas y demandas del gobierno estudiantil', c:'Formal ascendente · reunión con la dirección'},
+  {a:'doc',b:'pad',t:['ext'],bend:14,bi:true, l:'Rendimiento, conducta y avisos de grado', c:'Escuela–familia · agenda, entrevista, WhatsApp de grado'},
+  {a:'dir',b:'com',t:['ext'],bend:-18,bi:true, l:'Gestión de apoyos y rendición de cuentas', c:'Escuela–comunidad · Consejo Escolar de Desarrollo, COMDE'},
+  {a:'dir',b:'pad',t:['ext'],bend:-70, l:'Convocatorias a asamblea y decisiones del centro', c:'Escuela–familia · circular, asamblea'},
+  {a:'pad',b:'com',t:['inf','ext'],bend:-20,bi:true, l:'Opiniones sobre la escuela entre vecinos', c:'Informal · conversaciones del barrio, redes sociales'},
+  {a:'est',b:'pad',t:['inf'],bend:40,bi:true, l:'Lo que los hijos cuentan en casa sobre la escuela', c:'Informal · conversación familiar'},
+  {a:'adm',b:'pad',t:['inf'],bend:90, l:'Comentarios de oficina que llegan a las familias ("radio pasillo")', c:'Informal · rumor'},
+  {a:'est',b:'est',t:['hor'],bend:0,self:'est', l:'Compañeros que se apoyan y se organizan entre sí', c:'Horizontal · grupos de trabajo, gobierno estudiantil'},
+];
+const COLOR={down:'--t-down',up:'--t-up',hor:'--t-hor',inf:'--t-inf',ext:'--t-ext'};
+const NS='http://www.w3.org/2000/svg';
+const defs=document.getElementById('defs'), gE=document.getElementById('edges'), gN=document.getElementById('nodes');
+Object.entries(COLOR).forEach(([k,v])=>{
+  ['end','start'].forEach(dir=>{
+    const m=document.createElementNS(NS,'marker');
+    m.setAttribute('id',`m-${k}-${dir}`); m.setAttribute('viewBox','0 0 10 10'); m.setAttribute('refX','9'); m.setAttribute('refY','5');
+    m.setAttribute('markerWidth','6'); m.setAttribute('markerHeight','6'); m.setAttribute('orient', dir==='end'?'auto':'auto-start-reverse');
+    const p=document.createElementNS(NS,'path'); p.setAttribute('d','M0 0L10 5L0 10z'); p.setAttribute('style',`fill:var(${v})`); m.appendChild(p); defs.appendChild(m);
+  });
+});
+const R=34;
+function pathFor(e){
+  if(e.self){ const n=NODES[e.self]; return `M${n.x-22} ${n.y+R-4} C ${n.x-80} ${n.y+80}, ${n.x+80} ${n.y+80}, ${n.x+22} ${n.y+R-4}`; }
+  const A=NODES[e.a], B=NODES[e.b]; const dx=B.x-A.x, dy=B.y-A.y, L=Math.hypot(dx,dy);
+  const ux=dx/L, uy=dy/L, nx=-uy, ny=ux;
+  const mx=(A.x+B.x)/2+nx*e.bend, my=(A.y+B.y)/2+ny*e.bend;
+  const s1x=mx-A.x, s1y=my-A.y, l1=Math.hypot(s1x,s1y); const sx=A.x+s1x/l1*R, sy=A.y+s1y/l1*R;
+  const s2x=mx-B.x, s2y=my-B.y, l2=Math.hypot(s2x,s2y); const ex=B.x+s2x/l2*(R+4), ey=B.y+s2y/l2*(R+4);
+  return `M${sx.toFixed(1)} ${sy.toFixed(1)} Q ${mx.toFixed(1)} ${my.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`;
+}
+EDGES.forEach((e,i)=>{
+  const d=pathFor(e), t=e.t[0], g=document.createElementNS(NS,'g'); g.dataset.i=i;
+  const p=document.createElementNS(NS,'path'); p.setAttribute('d',d); p.setAttribute('class','edge'+(e.t.includes('inf')?' inf':''));
+  p.setAttribute('style',`stroke:var(${COLOR[t]})`); p.setAttribute('marker-end',`url(#m-${t}-end)`); if(e.bi) p.setAttribute('marker-start',`url(#m-${t}-start)`);
+  const h=document.createElementNS(NS,'path'); h.setAttribute('d',d); h.setAttribute('class','hit'); h.setAttribute('tabindex','0'); h.setAttribute('role','button');
+  h.setAttribute('aria-label',e.l);
+  const ti=document.createElementNS(NS,'title'); ti.textContent=e.l; h.appendChild(ti);
+  g.appendChild(p); g.appendChild(h); gE.appendChild(g); e.el=p; e.g=g;
+  const act=()=>showEdge(e); h.addEventListener('click',act); h.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();act()}});
+});
+Object.entries(NODES).forEach(([k,n])=>{
+  const g=document.createElementNS(NS,'g'); g.setAttribute('class','node'); g.setAttribute('transform',`translate(${n.x} ${n.y})`);
+  g.setAttribute('tabindex','0'); g.setAttribute('role','button'); g.setAttribute('aria-label',n.label); g.dataset.k=k;
+  const c=document.createElementNS(NS,'circle'); c.setAttribute('r',R); c.setAttribute('class','bg');
+  const ic=document.createElementNS(NS,'path'); ic.setAttribute('d',n.ic); ic.setAttribute('class','ic'); ic.setAttribute('transform','translate(0 -4)');
+  const tx=document.createElementNS(NS,'text'); tx.setAttribute('y', k==='est'||k==='pad' ? R+22 : -R-10); tx.textContent=n.label;
+  g.append(c,ic,tx); gN.appendChild(g); n.el=g;
+  const act=()=>showNode(k); g.addEventListener('click',act); g.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();act()}});
+});
+let filter='all', selNode=null;
+function applyView(){
+  EDGES.forEach(e=>{
+    const fOk = filter==='all' || e.t.includes(filter);
+    const nOk = !selNode || e.a===selNode || e.b===selNode || e.self===selNode;
+    e.g.classList.toggle('dim', !(fOk&&nOk));
+    e.el.classList.toggle('flow', fOk&&nOk&&(filter!=='all'||selNode) && !e.t.includes('inf'));
+  });
+  Object.entries(NODES).forEach(([k,n])=>n.el.classList.toggle('sel',k===selNode));
+}
+const TYPE_NAME={down:'Descendente',up:'Ascendente',hor:'Horizontal',inf:'Informal',ext:'Familia y comunidad'};
+function showNode(k){
+  selNode = selNode===k ? null : k; applyView();
+  const panel=document.getElementById('panel');
+  if(!selNode){ panel.innerHTML='<h3>Explora la red</h3><p class="role">Toca un actor o una flecha para ver los detalles.</p>'; return; }
+  const n=NODES[k];
+  const out=EDGES.filter(e=>e.a===k&&!e.self || (e.bi&&e.b===k)), inn=EDGES.filter(e=>e.b===k&&!e.self || (e.bi&&e.a===k)), self=EDGES.filter(e=>e.self===k);
+  const li=e=>`<li><span class="dot" style="display:inline-block;margin-right:6px;background:var(${COLOR[e.t[0]]})"></span>${e.l} <span class="hint">(${TYPE_NAME[e.t[0]]})</span></li>`;
+  panel.innerHTML=`<p class="eyebrow">Actor seleccionado</p><h3>${n.label}</h3><p class="role">${n.role}</p>
+    <b style="font-family:var(--f-display)">Envía</b><ul>${out.map(li).join('')||'<li>—</li>'}</ul>
+    <b style="font-family:var(--f-display)">Recibe</b><ul>${inn.map(li).join('')||'<li>—</li>'}</ul>
+    ${self.length?`<b style="font-family:var(--f-display)">Entre pares</b><ul>${self.map(li).join('')}</ul>`:''}
+    <p class="hint">Toca de nuevo el actor para ver toda la red.</p>`;
+}
+function showEdge(e){
+  const name=x=>NODES[x].label;
+  document.getElementById('panel').innerHTML=`<p class="eyebrow">Flujo de comunicación</p>
+    <h3>${e.self?name(e.self)+' ↔ '+name(e.self):name(e.a)+(e.bi?' ↔ ':' → ')+name(e.b)}</h3>
+    <p class="role" style="margin-top:6px">${e.l}</p>
+    <p><span class="chip"><span class="dot" style="background:var(${COLOR[e.t[0]]})"></span>${e.t.map(x=>TYPE_NAME[x]).join(' · ')}</span></p>
+    <p class="hint" style="margin-top:10px">Canal: ${e.c}</p>`;
+}
+document.querySelectorAll('.fbtn').forEach(b=>b.addEventListener('click',()=>{
+  filter=b.dataset.f; document.querySelectorAll('.fbtn').forEach(x=>x.setAttribute('aria-pressed',x===b)); applyView();
+}));
+applyView();
+
+/* ---------- Mapa de poder ---------- */
+const POWER=[['Director',5,3],['Docentes con antigüedad',2,5],['Docentes jóvenes',2,2],['Directiva de padres',2,4],['Gobierno estudiantil',1,2],['Personal administrativo',1,3],['Comunidad y municipalidad',1,3]];
+const pw=document.getElementById('power');
+POWER.forEach(([n,f,i])=>{
+  const row=document.createElement('div'); row.className='prow';
+  const bars=(v,c)=>`<div class="bars ${c}" role="img" aria-label="${v} de 5">${[1,2,3,4,5].map(x=>`<i class="${x<=v?'on':''}"></i>`).join('')}</div>`;
+  row.innerHTML=`<b>${n}</b>${bars(f,'f')}${bars(i,'n')}`; pw.appendChild(row);
+});
+document.querySelectorAll('.tab[data-t]').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab[data-t]').forEach(x=>x.setAttribute('aria-selected',x===t));
+  document.querySelectorAll('[data-p]').forEach(p=>p.hidden = p.dataset.p!==t.dataset.t);
+}));
+
+/* ---------- Casos ---------- */
+const C=(k,txt)=>`<a class="c" data-r="${k}" href="#ref-${k}">${txt}</a>`;
+const CASES=[
+ {kind:'Comunicación efectiva', col:'--t-hor', title:'Cambio de horario por lluvias',
+  text:'Por las lluvias, la Secretaría ordena adelantar la salida a las 11:00 durante una semana. La directora tiene un día para avisar a 600 familias, muchas sin datos móviles.',
+  q:'¿Qué estrategia garantiza que el mensaje llegue?',
+  opts:[
+   {t:'Publicarlo solo en la página de Facebook de la escuela.', ok:false},
+   {t:'Usar varios canales (circular firmada, WhatsApp de cada grado, aviso de los docentes en clase) y pedir confirmación de recibido.', ok:true},
+   {t:'Avisar a los docentes y confiar en que los estudiantes lo comenten en casa.', ok:false}],
+  fb:`Limitarse a un solo canal es un problema de calidad de la información; combinar medio escrito y oral suele dar una comunicación más efectiva (${C('nieto2003','Nieto Cano, 2003, pp. 112, 124')}). La firma de recibido funciona como feedback y convierte el aviso en comunicación de doble vía (${C('nieto2003','Nieto Cano, 2003, p. 125')}). Adaptar los canales al perfil de las familias también es clave (${C('garreta2022','Garreta-Bochaca &amp; Llevot-Calvet, 2022')}).`},
+ {kind:'Problema de comunicación', col:'--t-inf', title:'El rumor de la cuota',
+  text:'Circula entre las madres que la escuela cobrará una cuota "obligatoria" para reparar el techo. Nadie sabe de dónde salió; algunas familias ya están molestas en el grupo de WhatsApp.',
+  q:'¿Cómo debería actuar la dirección?',
+  opts:[
+   {t:'Ignorarlo: los rumores se apagan solos.', ok:false},
+   {t:'Buscar y sancionar a quien lo inició.', ok:false},
+   {t:'Convocar una asamblea con el Consejo Escolar de Desarrollo, explicar la situación con datos y acordar en conjunto cómo financiar la reparación.', ok:true}],
+  fb:`Las redes informales llenan el vacío que deja la información oficial. Reales o no, los rumores tienen efectos, por eso hay que atenderlos y clarificarlos (${C('nieto2003','Nieto Cano, 2003, pp. 117–118')}). La respuesta es informar con transparencia y decidir con las familias en el espacio que la ley prevé (${C('hn2011','Congreso Nacional de Honduras, 2011')}).`},
+ {kind:'Relaciones de poder', col:'--t-up', title:'La asignación de grados',
+  text:'Un director recién llegado quiere rotar los grados. Un grupo de docentes con más de 15 años en el centro se opone: siempre han tenido los grados superiores y la jornada matutina. Otros docentes, más jóvenes, apoyan el cambio en voz baja.',
+  q:'¿Qué haría un gestor con visión micropolítica?',
+  opts:[
+   {t:'Imponer la rotación con base en su autoridad.', ok:false},
+   {t:'Abrir el tema en el consejo de profesores, escuchar a ambos grupos, acordar criterios públicos y aplicar el cambio de forma gradual.', ok:true},
+   {t:'Dejar todo como está para evitar el conflicto.', ok:false}],
+  fb:`Hay intereses personales y materiales en juego (grado y jornada), y la llegada de un nuevo director activa a los grupos de interés (${C('gonzalez2003','González González, 2003, pp. 136–137')}). Imponer solo produciría falsos consensos; lo recomendable es clarificar y decidir en conjunto (${C('gonzalez2003','González González, 2003, p. 143')}). Gestionado con diálogo, el conflicto se vuelve mejora (${C('jares1997','Jares, 1997')}).`}
+];
+const ART=[
+ /* lluvia y aviso */
+ `<svg viewBox="0 0 230 170" role="img" aria-label="Ilustración: nubes de lluvia sobre la escuela, un reloj que marca las 11 y un teléfono con un aviso">
+   <rect x="60" y="92" width="110" height="70" class="fig"/><polygon points="52,94 115,62 178,94" style="fill:var(--accent);stroke:var(--ink);stroke-width:2"/>
+   <rect x="103" y="122" width="24" height="40" class="fig"/>
+   <g class="ink"><path d="M40 40 a14 14 0 0 1 26 -6 a16 16 0 0 1 30 6 a10 10 0 0 1 0 20 h-52 a10 10 0 0 1 -4 -20z" style="fill:var(--sheet)"/>
+   <path d="M50 70 l-4 10 M66 70 l-4 10 M82 70 l-4 10"/></g>
+   <path d="M50 70 l-4 10 M66 70 l-4 10 M82 70 l-4 10 M146 34 l-4 10 M160 34 l-4 10" style="stroke:var(--t-down);stroke-width:2.5;stroke-linecap:round"/>
+   <circle cx="190" cy="40" r="22" class="fig"/><path d="M190 40 v-13 M190 40 l-11 -5" class="ink"/><circle cx="190" cy="40" r="2.5" style="fill:var(--ink)"/>
+   <rect x="182" y="100" width="34" height="58" rx="6" class="fig"/><rect x="187" y="110" width="24" height="10" rx="3" style="fill:var(--mark)"/><rect x="187" y="124" width="18" height="8" rx="3" style="fill:var(--t-hor)"/>
+ </svg>`,
+ /* rumor en el chat */
+ `<svg viewBox="0 0 230 170" role="img" aria-label="Ilustración: un chat de padres lleno de mensajes alarmados sobre una cuota">
+   <rect x="58" y="12" width="114" height="150" rx="14" class="fig"/><rect x="58" y="12" width="114" height="24" rx="12" style="fill:var(--accent)"/>
+   <text x="115" y="29" text-anchor="middle" class="svgt" style="font-size:10px;fill:#fff">Padres 4.º grado</text>
+   <rect x="66" y="46" width="70" height="20" rx="8" style="fill:var(--paper);stroke:var(--line)"/><text x="72" y="60" class="svgt" style="font-size:9px">¿Cuota obligatoria?</text>
+   <rect x="96" y="72" width="68" height="20" rx="8" style="fill:var(--accent-soft)"/><text x="102" y="86" class="svgt" style="font-size:9px">¡Nadie avisó!</text>
+   <rect x="66" y="98" width="62" height="20" rx="8" style="fill:var(--paper);stroke:var(--line)"/><text x="72" y="112" class="svgt" style="font-size:9px">¿Cuánto es?</text>
+   <rect x="96" y="124" width="68" height="20" rx="8" style="fill:var(--accent-soft)"/><text x="102" y="138" class="svgt" style="font-size:9px">Dicen que L 500</text>
+   <circle cx="188" cy="40" r="16" style="fill:var(--t-inf)"/><text x="188" y="47" text-anchor="middle" class="svgt" style="font-size:20px;fill:#fff">!</text>
+   <circle cx="34" cy="96" r="14" style="fill:var(--t-inf)"/><text x="34" y="102" text-anchor="middle" class="svgt" style="font-size:16px;fill:#fff">?</text>
+ </svg>`,
+ /* reunión de docentes */
+ `<svg viewBox="0 0 230 170" role="img" aria-label="Ilustración: reunión de docentes divididos en dos grupos alrededor de una mesa con el director al centro">
+   <rect x="40" y="112" width="150" height="14" rx="4" style="fill:var(--mark);stroke:var(--ink);stroke-width:2"/>
+   <line x1="56" y1="126" x2="56" y2="160" class="ink"/><line x1="174" y1="126" x2="174" y2="160" class="ink"/>
+   <g style="--g:var(--t-up)"><circle cx="34" cy="62" r="10" class="fig"/><path d="M20 108 v-26 a14 14 0 0 1 28 0 v26z" style="fill:var(--t-up);stroke:var(--ink);stroke-width:2"/>
+   <circle cx="68" cy="66" r="10" class="fig"/><path d="M54 110 v-24 a14 14 0 0 1 28 0 v24z" style="fill:var(--t-up);stroke:var(--ink);stroke-width:2"/></g>
+   <circle cx="115" cy="54" r="11" class="fig"/><path d="M100 110 v-30 a15 15 0 0 1 30 0 v30z" style="fill:var(--accent);stroke:var(--ink);stroke-width:2"/>
+   <circle cx="162" cy="66" r="10" class="fig"/><path d="M148 110 v-24 a14 14 0 0 1 28 0 v24z" style="fill:var(--t-hor);stroke:var(--ink);stroke-width:2"/>
+   <circle cx="196" cy="62" r="10" class="fig"/><path d="M182 108 v-26 a14 14 0 0 1 28 0 v26z" style="fill:var(--t-hor);stroke:var(--ink);stroke-width:2"/>
+   <path d="M44 34 q 6 -12 18 -6" class="ink"/><text x="40" y="30" class="svgt" style="font-size:11px;fill:var(--t-up)">¡No!</text>
+   <text x="170" y="30" class="svgt" style="font-size:11px;fill:var(--t-hor)">Sí…</text>
+ </svg>`
+];
+const cBox=document.getElementById('cases');
+CASES.forEach((cs,ci)=>{
+  const a=document.createElement('article'); a.className='sheet case'; a.style.setProperty('--c',`var(${cs.col})`);
+  a.innerHTML=`<div class="case-art">${ART[ci]}</div><div class="case-body"><span class="kind">Caso ${ci+1} · ${cs.kind}</span><h3>${cs.title}</h3><p>${cs.text}</p><b style="font-family:var(--f-display)">${cs.q}</b>
+    <div class="opts">${cs.opts.map((o,oi)=>`<button class="opt" data-o="${oi}" id="case${ci}-o${oi}">${o.t}</button>`).join('')}</div>
+    <div class="fb" hidden></div></div>`;
+  cBox.appendChild(a);
+  a.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{
+    const o=cs.opts[+b.dataset.o];
+    a.querySelectorAll('.opt').forEach((x,xi)=>{ x.classList.remove('right','wrong'); if(cs.opts[xi].ok) x.classList.add('right'); });
+    if(!o.ok) b.classList.add('wrong');
+    const fb=a.querySelector('.fb'); fb.hidden=false;
+    fb.innerHTML=(o.ok?'<b>Buena decisión.</b> ':'<b>Revisa esta opción.</b> ')+cs.fb;
+    fb.style.borderLeftColor = o.ok ? 'var(--ok)' : 'var(--bad)';
+  }));
+});
+
+/* ---------- Simulador 1: el viaje del mensaje ---------- */
+const MSG0='El lunes 10 hay reunión de padres a las 3:00 p. m. en el salón 4 para planificar la feria científica.';
+const PERSON='<svg viewBox="-13 -14 26 28"><circle cx="0" cy="-6" r="5" class="ink"/><path d="M-9 12 v-4 a9 9 0 0 1 18 0 v4" class="ink"/></svg>';
+const DOCI='<svg viewBox="-13 -14 26 28"><path d="M-8 -11 h11 l5 5 v17 h-16z M3 -11 v5 h5 M-4 0 h8 M-4 5 h8" class="ink"/></svg>';
+const PHONE='<svg viewBox="-13 -14 26 28"><rect x="-7" y="-12" width="14" height="24" rx="3" class="ink"/><path d="M-3 8 h6" class="ink"/></svg>';
+const ROUTES={
+ inf:{color:'--t-inf', steps:[
+  {who:'Secretaria', ic:PERSON, txt:MSG0, fid:100, lost:[], prob:'Mensaje original completo.'},
+  {who:'Conserje', ic:PERSON, txt:'El lunes hay reunión de padres a las 3 en el salón 4, por lo de la feria.', fid:80, lost:['Fecha'], prob:'Omisión: se suprime la fecha exacta.'},
+  {who:'Estudiante', ic:PERSON, txt:'Dice el conserje que el lunes hay reunión por la feria… creo que van a pedir plata.', fid:50, lost:['Fecha','Hora','Lugar'], prob:'Omisión y distorsión: se pierden hora y lugar, y aparece una idea nueva.'},
+  {who:'Madre', ic:PERSON, txt:'El lunes nos van a pedir dinero para la feria.', fid:25, lost:['Fecha','Hora','Lugar','Motivo'], prob:'Distorsión: el motivo cambió por completo.'},
+  {who:'Vecina', ic:PERSON, txt:'¡La escuela va a cobrar una cuota obligatoria! Y nadie sabe cuándo.', fid:5, lost:['Fecha','Hora','Lugar','Motivo'], prob:'Rumor: información sin evidencia que ya genera conflicto.'}],
+  lesson:`Cada persona omite detalles o altera el significado. Nieto Cano llama a esto problemas de <b>omisión</b> y <b>distorsión</b> (${C('nieto2003','2003, p. 124')}). Los rumores transmiten información sin evidencia y, aunque sean falsos, tienen efectos (${C('nieto2003','Nieto Cano, 2003, p. 118')}).`},
+ for:{color:'--t-down', steps:[
+  {who:'Dirección', ic:PERSON, txt:MSG0, fid:100, lost:[], prob:'Mensaje original completo.'},
+  {who:'Circular firmada', ic:DOCI, txt:MSG0+' Favor devolver firmada.', fid:100, lost:[], prob:'Medio escrito: deja constancia.'},
+  {who:'WhatsApp de grado', ic:PHONE, txt:'Recordatorio oficial: '+MSG0, fid:100, lost:[], prob:'Redundancia: el mismo mensaje por otro canal.'},
+  {who:'Docente en clase', ic:PERSON, txt:'Chicos, entreguen la circular en casa: reunión el lunes 10, 3:00 p. m., salón 4, sobre la feria científica.', fid:100, lost:[], prob:'Medio oral y cara a cara: el canal más rico.'},
+  {who:'Familia', ic:PERSON, txt:'Recibido. Firmo la circular: asistiré el lunes 10 a las 3:00 p. m. ¿Puedo llevar a mi hijo menor?', fid:100, lost:[], prob:'Feedback: la familia confirma y pregunta.'}],
+  lesson:`El mensaje llega completo porque combina medio escrito y oral, con repetición cuando hace falta (${C('nieto2003','Nieto Cano, 2003, pp. 112, 125')}). La firma y la pregunta de la familia son <b>feedback</b>: convierten el aviso en comunicación circular, de doble vía (${C('nieto2003','Nieto Cano, 2003, p. 125')}).`}
+};
+let route='inf', step=0;
+const chainEl=document.getElementById('chain'), bubEl=document.getElementById('bubble'), fidEl=document.getElementById('fid'), fidV=document.getElementById('fidv'), detEl=document.getElementById('dets'), lesEl=document.getElementById('simLesson'), nextB=document.getElementById('simNext');
+function drawSim(){
+  const R0=ROUTES[route];
+  chainEl.innerHTML=R0.steps.map((s,i)=>`${i?'<span class="harrow" aria-hidden="true">→</span>':''}<div class="hop ${i<=step?'on':''} ${i===step?'cur':''}" style="--c:var(${R0.color})"><span class="av">${s.ic}</span>${s.who}</div>`).join('');
+  const s=R0.steps[step];
+  bubEl.innerHTML=`<span class="who">${s.who} dice:</span>“${s.txt}”`;
+  fidEl.style.width=s.fid+'%'; fidEl.style.setProperty('--c', s.fid>=70?'var(--ok)':s.fid>=35?'var(--warn)':'var(--bad)'); fidV.textContent=s.fid+' %';
+  detEl.innerHTML=['Fecha','Hora','Lugar','Motivo'].map(d=>`<span class="det ${s.lost.includes(d)?'lost':''}">${d}</span>`).join('')+`<span class="prob">${s.prob}</span>`;
+  const end=step===R0.steps.length-1; nextB.disabled=end; nextB.style.opacity=end?.4:1;
+  lesEl.hidden=!end; if(end) lesEl.innerHTML='<b>Lo que muestra la simulación.</b> '+R0.lesson;
+}
+nextB.onclick=()=>{ if(step<ROUTES[route].steps.length-1){ step++; drawSim(); } };
+document.getElementById('simReset').onclick=()=>{ step=0; drawSim(); };
+document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',()=>{
+  route=b.dataset.route; step=0; document.querySelectorAll('[data-route]').forEach(x=>x.setAttribute('aria-selected',x===b)); drawSim();
+}));
+drawSim();
+
+/* ---------- Simulador 2: sé el director ---------- */
+const ROUNDS=[
+ {q:'¿Cómo presentas la idea de rotar los grados?', o:[
+   {t:'La anuncio por circular: es mi decisión como director.', d:{conf:-20,clima:-10,camb:20}, r:['Veteranos: "Ni siquiera nos consultó."','Jóvenes: apoyan, pero en silencio.','Padres: no se enteran todavía.']},
+   {t:'Converso antes, en privado, con los líderes informales de cada grupo.', d:{conf:15,clima:5,camb:5}, r:['Veteranos: "Al menos nos escucha."','Jóvenes: se sienten tomados en cuenta.','Padres: sin cambios.']},
+   {t:'Prefiero no mencionarlo todavía para evitar problemas.', d:{conf:0,clima:0,camb:-10}, r:['Veteranos: siguen igual.','Jóvenes: "Pensamos que iba a cambiar algo."','Padres: sin cambios.']}]},
+ {q:'En el consejo de profesores, los veteranos se oponen con fuerza. ¿Qué haces?', o:[
+   {t:'Llamo a votación inmediata: los jóvenes son mayoría y gana la rotación.', d:{conf:-15,clima:-15,camb:15}, r:['Veteranos: forman un bloque y empiezan a resistir.','Jóvenes: ganan, pero quedan expuestos.','Padres: escuchan rumores de pleito.']},
+   {t:'Formo una comisión mixta, con veteranos y jóvenes, para definir criterios públicos.', d:{conf:15,clima:10,camb:10}, r:['Veteranos: participan para defender sus intereses.','Jóvenes: aportan propuestas.','Padres: ven a un equipo trabajando.']},
+   {t:'Retiro la propuesta para calmar los ánimos.', d:{conf:-5,clima:5,camb:-20}, r:['Veteranos: "Ganamos."','Jóvenes: pierden confianza en el director.','Padres: sin cambios.']}]},
+ {q:'¿Cómo aplicas lo acordado?', o:[
+   {t:'Todo de una vez, el próximo año, sin excepciones.', d:{conf:-5,clima:-10,camb:15}, r:['Veteranos: cumplen a regañadientes.','Jóvenes: satisfechos.','Padres: confundidos por tantos cambios.']},
+   {t:'De forma gradual, con acuerdos escritos y una revisión al final del semestre.', d:{conf:10,clima:10,camb:10}, r:['Veteranos: aceptan porque el proceso fue justo.','Jóvenes: ven avances concretos.','Padres: reciben una explicación clara.']},
+   {t:'Hago excepciones para quienes protesten más.', d:{conf:-15,clima:-10,camb:-5}, r:['Veteranos: aprenden que presionar funciona.','Jóvenes: "Las reglas no son iguales para todos."','Padres: perciben favoritismo.']}]}
+];
+const START={conf:50,clima:50,camb:30};
+let S={...START}, rd=0;
+const clamp=v=>Math.max(0,Math.min(100,v));
+function drawMeters(){ ['conf','clima','camb'].forEach(k=>{ document.getElementById('m-'+k).style.width=S[k]+'%'; document.getElementById('v-'+k).textContent=S[k]; }); }
+const stage=document.getElementById('dirStage');
+function drawRound(){
+  drawMeters();
+  if(rd>=ROUNDS.length){ return drawEnd(); }
+  const R0=ROUNDS[rd];
+  stage.innerHTML=`<p class="round-n">Decisión ${rd+1} de ${ROUNDS.length}</p><h3 style="margin:6px 0 10px">${R0.q}</h3>
+    <div class="opts">${R0.o.map((o,i)=>`<button class="opt" id="dir${rd}-o${i}" data-i="${i}">${o.t}</button>`).join('')}</div><div id="dirOut"></div>`;
+  stage.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{
+    const o=R0.o[+b.dataset.i]; stage.querySelectorAll('.opt').forEach(x=>x.disabled=true); b.classList.add(o.d.conf+o.d.clima>0?'right':'wrong');
+    Object.entries(o.d).forEach(([k,v])=>S[k]=clamp(S[k]+v)); drawMeters();
+    const sg=v=>(v>0?'+':'')+v;
+    document.getElementById('dirOut').innerHTML=`<p class="delta" style="margin:12px 0 8px">Confianza ${sg(o.d.conf)} · Clima ${sg(o.d.clima)} · Cambio ${sg(o.d.camb)}</p>
+      <div class="react">${o.r.map(x=>`<span>${x}</span>`).join('')}</div>
+      <div class="row" style="margin-top:12px"><button class="btn" id="dirNext">${rd<ROUNDS.length-1?'Siguiente decisión':'Ver resultado'}</button></div>`;
+    document.getElementById('dirNext').onclick=()=>{ rd++; drawRound(); };
+  }));
+}
+function drawEnd(){
+  let p,txt;
+  if(S.conf>=65&&S.camb>=50){ p='Liderazgo dialogante'; txt=`Lograste el cambio sin romper la escuela. Clarificaste las metas en conjunto y abriste la decisión a todos, como recomienda ${C('gonzalez2003','González González (2003, pp. 143–144)')}. Reconociste que los veteranos tienen influencia aunque no tengan autoridad (${C('bardisa1997','Bardisa Ruiz, 1997')}).`; }
+  else if(S.camb>=50){ p='Liderazgo impositivo'; txt=`El cambio avanzó, pero a costa de la confianza. Imponer una línea produce falsos consensos: adhesiones superficiales que luego se rompen en la práctica (${C('gonzalez2003','González González, 2003, p. 143')}).`; }
+  else if(S.camb<35){ p='Liderazgo evitador'; txt=`Evitar el conflicto mantuvo la calma, pero la escuela no mejoró. La no-acción y la ocultación de conflictos también tienen un significado micropolítico (${C('gonzalez2003','González González, 2003, p. 137')}); bien gestionado, el conflicto es una oportunidad (${C('jares1997','Jares, 1997')}).`; }
+  else { p='Liderazgo en construcción'; txt=`Hubo avances parciales. Prueba otra combinación: escuchar primero, construir criterios con ambos grupos e implementar de forma gradual (${C('gonzalez2003','González González, 2003, pp. 143–144')}).`; }
+  stage.innerHTML=`<p class="round-n">Resultado</p><p class="profile">${p}</p><p style="margin:8px 0 14px">${txt}</p>
+    <div class="row"><button class="btn" id="dirAgain">Intentar de nuevo</button></div>`;
+  document.getElementById('dirAgain').onclick=()=>{ S={...START}; rd=0; drawRound(); };
+}
+drawRound();
+
+
+/* ---------- Elementos de la comunicación (Nieto Cano, 2003) ---------- */
+const ELEM=[
+ {k:'Emisor', h:'--c-sky', d:`Elabora la información, codifica el mensaje y elige el canal. Su <b>credibilidad</b> (pericia y confianza) y sus características psicológicas influyen en cómo se recibe lo que dice (${C('nieto2003','Nieto Cano, 2003, pp. 110–111')}).`},
+ {k:'Mensaje y código', h:'--c-amber', d:`Conjunto de signos y símbolos: lenguaje oral y escrito, señales no verbales e incluso el uso del espacio y la ropa. Se <b>codifica</b> al emitirlo y se <b>descodifica</b> al recibirlo (${C('nieto2003','Nieto Cano, 2003, p. 111')}).`},
+ {k:'Medio o canal', h:'--c-green', d:`Vía por la que viaja el mensaje. Su <b>riqueza</b> es la capacidad de transmitir información y reducir ambigüedad; la interacción cara a cara es la más rica (${C('nieto2003','Nieto Cano, 2003, p. 112')}).`},
+ {k:'Receptor y contexto', h:'--c-violet', d:`El receptor reconstruye el mensaje de forma activa. El centro escolar, con su jerarquía, roles y cultura, da sentido a lo que se comunica (${C('nieto2003','Nieto Cano, 2003, pp. 112–113')}).`},
+ {k:'Feedback', h:'--c-coral', d:`Respuesta del receptor que permite comprobar si se entendió y corregir. Conviene solicitarlo, darlo a tiempo y centrarlo en conductas concretas (${C('nieto2003','Nieto Cano, 2003, pp. 125–126')}).`}
+];
+(()=>{ const fl=document.getElementById('elflow'), ds=document.getElementById('eldesc'); if(!fl) return;
+  fl.innerHTML=ELEM.map((e,i)=>`${i?'<span class="elarrow" aria-hidden="true">→</span>':''}<button class="elbtn" role="tab" id="el-${i}" data-i="${i}" style="--h:var(${e.h})" aria-selected="${i===0}">${e.k}</button>`).join('');
+  const show=i=>{ fl.querySelectorAll('.elbtn').forEach(b=>b.setAttribute('aria-selected',b.dataset.i==i)); ds.style.setProperty('--h',`var(${ELEM[i].h})`); ds.innerHTML=`<b>${ELEM[i].k}.</b> ${ELEM[i].d}`; };
+  fl.querySelectorAll('.elbtn').forEach(b=>b.addEventListener('click',()=>show(+b.dataset.i))); show(0); })();
+
+/* ---------- Reflexión: conteo de palabras ---------- */
+(()=>{ const ps=[...document.querySelectorAll('#reflexText p:not(.wc)')]; const n=ps.map(p=>p.textContent.trim().split(/\s+/).length).reduce((a,b)=>a+b,0);
+  document.getElementById('wc').textContent=`${n} palabras`; })();
+
+/* ---------- Quiz ---------- */
+const QUIZ=[
+ {q:'La directora envía una circular a todo el personal. ¿Qué tipo de red es?', o:['Formal descendente','Informal horizontal','Formal ascendente'], a:0},
+ {q:'Dos docentes de quinto grado se ponen de acuerdo en el pasillo para organizar una feria.', o:['Vertical descendente','Horizontal informal','Externa'], a:1},
+ {q:'Según Nieto Cano (2003), cuando un mensaje se transforma y cambia su significado ocurre un problema de…', o:['Omisión','Distorsión','Sobrecarga'], a:1},
+ {q:'Para González González (2003), el poder que es informal, circula en todas direcciones y opera por persuasión y negociación es…', o:['La autoridad','La influencia','La jerarquía'], a:1},
+ {q:'En Honduras, ¿qué espacio organiza la voz de los estudiantes?', o:['El COMDE','El gobierno estudiantil','La asamblea de padres'], a:1}
+];
+const qb=document.getElementById('quizBox'); let score=0, answered=0;
+QUIZ.forEach((it,qi)=>{
+  const d=document.createElement('div'); d.className='q';
+  d.innerHTML=`<b>${qi+1}. ${it.q}</b><div class="opts">${it.o.map((o,oi)=>`<button class="opt" id="q${qi}-o${oi}" data-o="${oi}">${o}</button>`).join('')}</div>`;
+  qb.appendChild(d);
+  d.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done) return; d.dataset.done=1; answered++;
+    const ok=+b.dataset.o===it.a; if(ok) score++;
+    d.querySelectorAll('.opt').forEach((x,xi)=>{ if(xi===it.a) x.classList.add('right'); });
+    if(!ok) b.classList.add('wrong');
+    sc.textContent=`${score} / ${QUIZ.length}`+(answered===QUIZ.length?(score>=4?' · ¡Excelente!':' · Repasen la red y los casos'):'');
+  }));
+});
+const foot=document.createElement('div'); foot.className='row'; foot.style.cssText='margin-top:14px;align-items:center;justify-content:space-between';
+foot.innerHTML='<span class="score" id="sc">0 / 5</span><button class="btn ghost" id="qreset">Reiniciar quiz</button>'; qb.appendChild(foot);
+const sc=document.getElementById('sc');
+document.getElementById('qreset').onclick=()=>{ score=0; answered=0; sc.textContent='0 / 5'; qb.querySelectorAll('.q').forEach(d=>{delete d.dataset.done; d.querySelectorAll('.opt').forEach(x=>x.classList.remove('right','wrong'))}); };
+
+/* ---------- Cronómetro de exposición (meta 8–10 min) ---------- */
+let t0=null, acc=0, tick=null; const tv=document.getElementById('tval'), tm=document.getElementById('timer'), tp=document.getElementById('tplay');
+function render(){ const s=Math.floor((acc+(t0?Date.now()-t0:0))/1000); tv.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+  tm.style.setProperty('--zone', s<480?'var(--ok)': s<=600?'var(--warn)':'var(--bad)'); }
+tp.onclick=()=>{ if(t0){acc+=Date.now()-t0; t0=null; clearInterval(tick); tp.textContent='▶'; tp.setAttribute('aria-label','Iniciar cronómetro');}
+  else{ t0=Date.now(); tick=setInterval(render,500); tp.textContent='❚❚'; tp.setAttribute('aria-label','Pausar cronómetro'); } render(); };
+document.getElementById('treset').onclick=()=>{ t0=null; acc=0; clearInterval(tick); tp.textContent='▶'; tm.style.removeProperty('--zone'); tv.textContent='00:00'; };
+
+/* ---------- Navegación activa ---------- */
+const links=[...document.querySelectorAll('.nav a')];
+const io=new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ links.forEach(l=>l.classList.toggle('on', l.getAttribute('href')==='#'+en.target.id)); }}),{rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('header[id], section[id]').forEach(s=>io.observe(s));
+</script>
+
+</body>
+</html>

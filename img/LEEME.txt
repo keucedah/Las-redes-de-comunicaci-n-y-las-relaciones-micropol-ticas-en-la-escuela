@@ -1,0 +1,14 @@
+CARPETA DE IMÁGENES DEL MURAL
+Sube aquí tus fotos con estos nombres EXACTOS (minúsculas, con guion):
+
+  logo.png       -> Logo de la universidad (cuadrado, fondo transparente)
+  imagen-1.jpg   -> Conceptos: docentes en reunión (horizontal 4:3)
+  imagen-2.jpg   -> Mapa de la red: reunión de padres con docentes (horizontal 4:3)
+  imagen-3.jpg   -> Micropolítica: directivos dialogando o negociando (horizontal 4:3)
+  imagen-4.jpg   -> Honduras: gobierno estudiantil o escuela hondureña (horizontal 4:3)
+  imagen-5.jpg   -> Reflexión: comunidad educativa reunida (panorámica 16:9)
+
+Recomendado: mínimo 1200 px de ancho y menos de 2 MB cada una.
+Si tu foto es .png o .jpeg, cambia la extensión en index.html (busca IMAGEN-1, etc.).
+Luego completa autor, año, sitio, licencia y fuente de cada imagen en index.html
+(busca "EDITA SOLO ESTA PARTE") para que salga la leyenda y la referencia APA 7.
